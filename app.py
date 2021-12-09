@@ -2,9 +2,14 @@
 import socket
 from flask import Flask, render_template
 
+# CONFIG
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lottery.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = 'LongAndRandomSecretKey'
 
 
+# HOME PAGE VIEW
 @app.route('/')
 def index():
     return render_template('index.html')
