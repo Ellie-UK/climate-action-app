@@ -1,6 +1,8 @@
 # IMPORTS
 import socket
 from flask import Flask, render_template
+from flask_login import LoginManager
+from flask_sqlalchemy import SQLAlchemy
 
 # CONFIG
 app = Flask(__name__)
@@ -8,6 +10,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///climate-action.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'LongAndRandomSecretKey'
 
+# initialise database
+db = SQLAlchemy(app)
 
 # HOME PAGE VIEW
 @app.route('/')
@@ -22,6 +26,16 @@ if __name__ == '__main__':
     free_socket.listen(5)
     free_port = free_socket.getsockname()[1]
     free_socket.close()
+
+    login_manager = LoginManager()
+    login_manager.login_view = 'users.login'
+    login_manager.init_app(app)
+
+    from models import User
+
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
 
     # BLUEPRINTS
     # import blueprints
