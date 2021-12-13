@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="columns is-vcentered is-centered">
+    <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+      <form action="" class="box">
+        <div class="field">
+          <label for="" class="label">Email</label>
+          <div class="control has-icons-left">
+            <input type="email" placeholder="e.g. bobsmith@gmail.com" class="input" required>
+            <span class="icon is-small is-left">
+              <i class="fa fa-envelope"></i>
+            </span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="" class="label">First Name</label>
+          <div class="control has-icons-left">
+            <input type="firstname" placeholder="bob" class="input" required>
+            <span class="icon is-small is-left">
+              <i class="fa fa-lock"></i>
+            </span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="" class="label">Last Name</label>
+          <div class="control has-icons-left">
+            <input type="lastname" placeholder="smith" class="input" required>
+            <span class="icon is-small is-left">
+              <i class="fa fa-lock"></i>
+            </span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="" class="label">Phone Number</label>
+          <div class="control has-icons-left">
+            <input type="phone" placeholder="0123-456-7890" class="input" required>
+            <span class="icon is-small is-left">
+              <i class="fa fa-lock"></i>
+            </span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="" class="label">Password</label>
+          <div class="control has-icons-left">
+            <input type="password" placeholder="*******" class="input" required>
+            <span class="icon is-small is-left">
+              <i class="fa fa-lock"></i>
+            </span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="" class="label">Confirm Password</label>
+          <div class="control has-icons-left">
+            <input type="confirm_password" placeholder="*******" class="input" required>
+            <span class="icon is-small is-left">
+              <i class="fa fa-lock"></i>
+            </span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="" class="label">Pin Key</label>
+          <div class="control has-icons-left">
+            <input type="pin_key" placeholder="" class="input" required>
+            <span class="icon is-small is-left">
+              <i class="fa fa-lock"></i>
+            </span>
+          </div>
+        </div>
+        <div class="">
+          <button class="button is-success">
+            Register
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
