@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
+from werkzeug.security import check_password_hash
 from users.forms import LoginForm, RegisterForm
 from models import User
 from app import db
@@ -10,8 +11,13 @@ users_blueprint = Blueprint('users', __name__, template_folder='templates')
 @users_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-
+    # Validation check for email and password
     if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+
+        if not user or not check_password_hash(user.password, form.password.data):
+            flash('Please check your login details and try again')
+
         return login()
     return render_template('login.html', form=form)
 
@@ -46,4 +52,3 @@ def register():
         return redirect(url_for('users.login'))
 
     return render_template('register.html', form=form)
-
