@@ -12,7 +12,6 @@ app.config['SECRET_KEY'] = 'LongAndRandomSecretKey'
 
 db = SQLAlchemy(app)
 
-
 # HOME PAGE VIEW
 @app.route('/')
 def index():
