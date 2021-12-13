@@ -38,4 +38,29 @@
     </div>
   </div>
 
+  <div class="column is-8 is-offset-2">
+    <h4 class="title is-4">Security log</h4>
+    <div class="box">
+      {% if logs %}
+        <div class="field">
+          <table class="table">
+            <tr>
+              <th>Last 15 records</th>
+            </tr>
+            {% for record in logs %}
+              <tr>
+                <td>{{ record }}</td>
+              </tr>
+            {% endfor %}
+          </table>
+        </div>
+      {% endif %}
+      <form method="POST" action="/logging">
+        <div>
+          <button class="button is-info is-centered is-rounded">View security log</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 {% endblock %}
