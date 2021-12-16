@@ -1,14 +1,14 @@
 # IMPORTS
 from datetime import datetime
 
-
+import flask
 from flask import Blueprint, render_template, flash, redirect, url_for, request, session
 from flask_login import current_user, login_user, logout_user, login_required
 
 from app import db
 from models import User
-from users.forms import RegisterForm, LoginForm
-from werkzeug.security import check_password_hash
+from users.forms import RegisterForm, LoginForm, ChangePasswordForm
+from werkzeug.security import check_password_hash, generate_password_hash
 import pyotp
 
 users_blueprint = Blueprint('users', __name__, template_folder='templates')
@@ -24,6 +24,7 @@ def login():
 
         if not user or not check_password_hash(user.password, form.password.data):
             flash('Please check your login details and try again')
+            return render_template('login.html', form=form)
 
         login_user(user)
 
@@ -67,9 +68,35 @@ def register():
 @users_blueprint.route('/account')
 @login_required
 def account():
+    print("wow!")
     return render_template('account.html',
                            acc_no=current_user.id,
                            email=current_user.email,
                            firstname=current_user.firstname,
                            lastname=current_user.lastname,
                            phone=current_user.phone)
+
+@users_blueprint.route('/changepassword', methods=['GET', 'POST'])
+@login_required
+def changepassword():
+    form = ChangePasswordForm()
+    # if request method is POST or form is valid
+    if form.validate_on_submit():
+        if not check_password_hash(current_user.password, form.current_password.data):
+            flash('Current password is incorrect')
+            return render_template('changepassword.html', form=form)
+        current_user.password = generate_password_hash(form.new_password.data)
+        db.session.commit()
+        return redirectpage("Your password was changed successfully", 3, url_for('users.account'))
+    return render_template('changepassword.html', form=form)
+
+# view logout
+@users_blueprint.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirectpage("Logged out successfully", 3, url_for('index'))
+
+@users_blueprint.route('/redirectpage', methods=['GET'])
+def redirectpage(message, wait, pointer):
+    return render_template('redirectpage.html', message=message, wait=wait, pointer=pointer)
