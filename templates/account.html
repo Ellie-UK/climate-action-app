@@ -1,9 +1,27 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-<h1 class="title">
-  Welcome, {{ firstname }}
-</h1>
-
+    <div class="block is-vcentered is-centered">
+        <div class="column is-10 is-offset-1">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="notification is-danger">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+        </div>
+    <div class="block is-vcentered is-centered">
+            <h1 class="title">
+            Welcome, {{ firstname }}
+        </h1>
+    </div>
+    <div class="block is-vcentered is-centered">
+        <div class="buttons is-centered">
+            <a class="button is-primary" href="{{ url_for('users.changepassword') }}">
+                <strong>Change password</strong>
+            </a>
+        </div>
+    </div>
+    </div>
 {% endblock %}
