@@ -44,8 +44,12 @@
                      </div>
                   </section>
                    <footer class="modal-card-foot">
-                      <button class="button is-danger">Delete account</button>
-                      <button aria-label="close" class="button is-light close-modal" data-modal-id="#my-modal">Cancel</button>
+                       <a class="button is-danger" href="{{ url_for('users.deleteaccount') }}">
+                           <strong>Delete account</strong>
+                       </a>
+                       <a aria-label="close" class="button is-info close-modal" data-modal-id="#my-modal">
+                           Cancel
+                       </a>
                    </footer>
 
                </div>
