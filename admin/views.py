@@ -16,7 +16,7 @@ def admin():
 # MISSING - add access restrictions
 def view_users():
     return render_template('admin.html', lastname="PLACEHOLDER FOR LASTNAME",
-                           all_users=User.query.filter_by(role='user').all())
+                           all_users=User.query.all())
 
 
 # view logging (last 15 log records)
