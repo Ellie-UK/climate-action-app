@@ -68,7 +68,6 @@ def register():
 @users_blueprint.route('/account')
 @login_required
 def account():
-    print("wow!")
     return render_template('account.html',
                            acc_no=current_user.id,
                            email=current_user.email,
@@ -96,6 +95,21 @@ def changepassword():
 def logout():
     logout_user()
     return redirectpage("Logged out successfully", 3, url_for('index'))
+
+@users_blueprint.route('/deleteaccount', methods=['POST', 'GET'])
+@login_required
+def deleteaccount():
+    if current_user.role == 'admin':
+        return redirectpage("ERROR: Admin accounts cannot be deleted", 3, url_for('users.account'))
+    id = current_user.id
+    user_to_delete = User.query.get_or_404(id)
+    try:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        return redirectpage("Account deleted successfully", 3, url_for('index'))
+    except:
+        return redirectpage("Something went wrong, please try again later", 3, url_for('index'))
+
 
 @users_blueprint.route('/redirectpage', methods=['GET'])
 def redirectpage(message, wait, pointer):
