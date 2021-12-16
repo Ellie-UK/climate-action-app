@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <body>
+        <h1><b> {{ message }} </b></h1>
+        <h3>Redirecting in <span id="countdown">{{ wait }}</span> seconds.</h3>
+        <script>
+            var wait = {{ wait|safe }};
+            var pointer = {{ pointer|tojson }};
+
+            function countdown() {
+                if (!(wait === 0)) {
+                    document.getElementById("countdown").innerHTML = wait;
+                    window.setTimeout("countdown()", 1000);
+                    wait = wait - 1;
+                } else {
+                    window.location = pointer;
+                }
+            }
+
+            // Run countdown function
+            countdown();
+        </script>
+    </body>
+
+{% endblock %}
