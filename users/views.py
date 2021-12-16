@@ -1,12 +1,15 @@
+# IMPORTS
 from datetime import datetime
 
-from flask import Blueprint, render_template, flash, url_for, redirect
-from flask_login import login_user
-from werkzeug.security import check_password_hash
+
+from flask import Blueprint, render_template, flash, redirect, url_for, request, session
+from flask_login import current_user, login_user, logout_user, login_required
 
 from app import db
 from models import User
-from users.forms import LoginForm, RegisterForm
+from users.forms import RegisterForm, LoginForm
+from werkzeug.security import check_password_hash
+import pyotp
 
 users_blueprint = Blueprint('users', __name__, template_folder='templates')
 
@@ -29,7 +32,7 @@ def login():
         db.session.add(user)
         db.session.commit()
 
-        return login()
+        return account()
     return render_template('login.html', form=form)
 
 
@@ -59,3 +62,14 @@ def register():
         return redirect(url_for('users.login'))
 
     return render_template('register.html', form=form)
+
+
+@users_blueprint.route('/account')
+@login_required
+def account():
+    return render_template('account.html',
+                           acc_no=current_user.id,
+                           email=current_user.email,
+                           firstname=current_user.firstname,
+                           lastname=current_user.lastname,
+                           phone=current_user.phone)
