@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from flask_login import login_required
+from flask_login import login_required, current_user
 from models import User
 
 admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
@@ -10,7 +10,7 @@ admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
 @login_required
 # MISSING - admin role restriction
 def admin():
-    return render_template('admin.html', lastname="PLACEHOLDER FOR LASTNAME")
+    return render_template('admin.html', lastname=current_user.lastname)
 
 
 # view all users
@@ -18,7 +18,7 @@ def admin():
 @login_required
 # MISSING - admin role restriction
 def view_users():
-    return render_template('admin.html', lastname="PLACEHOLDER FOR LASTNAME",
+    return render_template('admin.html', lastname=current_user.lastname,
                            all_users=User.query.all())
 
 
@@ -32,4 +32,4 @@ def logging():
         content = f.read().splitlines()[-15:]
         content.reverse()
 
-    return render_template('admin.html', lastname="PLACEHOLDER FOR LASTNAME", logs=content)
+    return render_template('admin.html', lastname=current_user.lastname, logs=content)
