@@ -27,7 +27,7 @@ def view_users():
 @login_required
 # MISSING - admin role restriction
 def logging():
-    # MISSING - create 'user_logs.log' that contains logging data
+    # read last 15 log records
     with open("user_logs.log", "r") as f:
         content = f.read().splitlines()[-15:]
         content.reverse()
