@@ -8,52 +8,55 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"/>
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-tooltip@3.0.2/dist/css/bulma-tooltip.min.css">
 </head>
 
 
 <body>
-<div class="hero-head">
-    <nav class="navbar is-fixed-top is-info" role="navigation" aria-label="main navigation">
+<div class="hero-head has-navbar-fixed-top">
+    <nav class="navbar is-transparent is-fixed-top">
       <div class="navbar-brand">
-        <a class="navbar-item">
-          <img src="../static/TemporaryLogo.png" width="123" height="28">
+        <a class="navbar-item" href="/">
+          <img src="../static/Earth.png" alt="Planet Effect" width="0" height="0">
         </a>
-
-        <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
+        <div class="navbar-burger" data-target="navbarA">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
       </div>
 
-      <div id="navMenu" class="navbar-menu">
+      <div id="navbarA" class="navbar-menu">
         <div class="navbar-start">
           <a class="navbar-item" href="/">
             Home
           </a>
-
-          <a class="navbar-item" href="{{ url_for('users.account') }}">
-                Account
-          </a>
-
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">
-              More
+            <a class="navbar-link" href="https://bulma.io/documentation/overview/start/">
+              Docs
             </a>
-
-            <div class="navbar-dropdown">
-              <a class="navbar-item">
-                About
+            <div class="navbar-dropdown is-boxed">
+              <a class="navbar-item" href="https://bulma.io/documentation/overview/start/">
+                Overview
               </a>
-              <a class="navbar-item">
-                Jobs
+              <a class="navbar-item" href="https://bulma.io/documentation/overview/modifiers/">
+                Modifiers
               </a>
-              <a class="navbar-item">
-                Contact
+              <a class="navbar-item" href="https://bulma.io/documentation/columns/basics/">
+                Columns
+              </a>
+              <a class="navbar-item" href="https://bulma.io/documentation/layout/container/">
+                Layout
+              </a>
+              <a class="navbar-item" href="https://bulma.io/documentation/form/general/">
+                Form
               </a>
               <hr class="navbar-divider">
-              <a class="navbar-item">
-                Report an issue
+              <a class="navbar-item" href="https://bulma.io/documentation/elements/box/">
+                Elements
+              </a>
+              <a class="navbar-item is-active" href="https://bulma.io/documentation/components/breadcrumb/">
+                Components
               </a>
             </div>
           </div>
@@ -61,21 +64,50 @@
 
         <div class="navbar-end">
           <div class="navbar-item">
-            <div class="buttons">
-              {% if not current_user.is_authenticated %}
-              <a class="button is-primary" href="{{ url_for('users.register') }}">
-                  <strong>Sign up</strong>
-              </a>
-              <a class="button is-light" href="{{ url_for('users.login') }}">
-                Log in
-              </a>
-              {% endif %}
               {% if current_user.is_authenticated %}
-              <a class="button is-light is-danger" href="{{ url_for('users.logout') }}">
-                Log out
-              </a>
-              {% endif %}
+              <div class="field is-grouped">
+              <p class="control">
+                <a class="button" href="{{ url_for('users.account') }}">
+                  <span class="icon">
+                    <i class="fas fa-user"></i>
+                  </span>
+                  <span>
+                    Account
+                  </span>
+                </a>
+              </p>
+              <p class="control">
+                <button class="button is-light is-danger" href="{{ url_for('users.logout') }}">
+                  <span class="icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                  </span>
+                    <span>Log out</span>
+                </button>
+              </p>
             </div>
+              {% endif %}
+              {% if not current_user.is_authenticated %}
+              <div class="field is-grouped">
+              <p class="control">
+                <a class="button" href="{{ url_for('users.login') }}">
+                  <span class="icon">
+                    <i class="fas fa-sign-in-alt"></i>
+                  </span>
+                  <span>
+                    Log in
+                  </span>
+                </a>
+              </p>
+              <p class="control">
+                <a class="button is-primary" href="{{ url_for('users.register') }}">
+                  <span class="icon">
+                    <i class="fas fa-user-plus"></i>
+                  </span>
+                  <span>Register</span>
+                </a>
+              </p>
+            </div>
+              {% endif %}
           </div>
         </div>
       </div>
@@ -91,6 +123,21 @@
             </div>
         </div>
     </section>
+
+    <footer class="footer pb-0">
+      <div class="container">
+        <div class="content has-text-centered">
+          <div class="soc">
+            <span class="has-tooltip-arrow" data-tooltip="GitHub Repo"><a href="https://github.com/Ellie-UK/climate-action-app"><i class="fab fa-github" style="color:black" aria-hidden="true"></i></a></span>
+            <span class="has-tooltip-arrow" data-tooltip="Email Us"><a href="mailto:test@email.com"><i class="fas fa-envelope" style="color:black" aria-hidden="true"></i></a></span>
+          </div>
+          <p>
+              <strong>Planet Effect</strong>™ by <strong>Team 11</strong>.<br>
+              The source  code is licensed <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
+          </p>
+        </div>
+      </div>
+    </footer>
 </div>
 </body>
 </html>
