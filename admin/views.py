@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template
+from flask_login import login_required
 from models import User
 
 admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
@@ -6,14 +7,16 @@ admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
 
 # view admin page
 @admin_blueprint.route('/admin')
-# MISSING - add access restrictions
+@login_required
+# MISSING - admin role restriction
 def admin():
     return render_template('admin.html', lastname="PLACEHOLDER FOR LASTNAME")
 
 
 # view all users
 @admin_blueprint.route('/view_users', methods=['POST'])
-# MISSING - add access restrictions
+@login_required
+# MISSING - admin role restriction
 def view_users():
     return render_template('admin.html', lastname="PLACEHOLDER FOR LASTNAME",
                            all_users=User.query.all())
@@ -21,7 +24,8 @@ def view_users():
 
 # view security logging data (last 15 log records)
 @admin_blueprint.route('/logging', methods=['POST'])
-# MISSING - add access restrictions
+@login_required
+# MISSING - admin role restriction
 def logging():
     # MISSING - create 'user_logs.log' that contains logging data
     with open("user_logs.log", "r") as f:
