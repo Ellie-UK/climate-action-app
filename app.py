@@ -1,15 +1,21 @@
 # IMPORTS
 import socket
 import logging
-from flask import Flask, render_template
-from flask_login import LoginManager
+from flask import Flask, render_template, request
+from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
+from functools import wraps
 
 
 # LOGGING
 class SecurityFilter(logging.Filter):
     def filter(self, record):
-        return "USER ACTIVITY" in record.getMessage()
+        if "USER ACTIVITY" in record.getMessage():
+            return True
+        elif "SECURITY" in record.getMessage():
+            return True
+        else:
+            return False
 
 fh = logging.FileHandler('user_logs.log', 'w')
 fh.setLevel(logging.WARNING)
@@ -29,6 +35,20 @@ app.config['SECRET_KEY'] = 'LongAndRandomSecretKey'
 
 # initialise database
 db = SQLAlchemy(app)
+
+# ROLE ACCESS CONTROL
+def required_roles(*roles, source):
+    def wrapper(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            if current_user.role not in roles:
+                logging.warning('SECURITY - Unauthorised access attempt to "%s" [%s, %s, %s]',
+                                source, current_user.id, current_user.email, request.remote_addr)
+                # redirect user to 403 error page
+                return render_template('error_codes/403.html')
+            return f(*args, **kwargs)
+        return wrapped
+    return wrapper
 
 # HOME PAGE VIEW
 @app.route('/')
