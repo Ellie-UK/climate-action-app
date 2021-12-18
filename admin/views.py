@@ -34,3 +34,16 @@ def logging():
         content.reverse()
 
     return render_template('admin.html', lastname=current_user.lastname, logs=content)
+
+
+# view whole security log
+@admin_blueprint.route('/seclog', methods=['POST'])
+@login_required
+@required_roles('admin', source='Admin Page - full security log')
+def full_logging():
+    # read whole log
+    with open("user_logs.log", "r") as f:
+        content = f.read().splitlines()
+        content.reverse()
+
+    return render_template('security_log.html', logs=content)
