@@ -25,13 +25,15 @@ def login():
         if not user or not check_password_hash(user.password, form.password.data):
             flash('Please check your login details and try again')
             return render_template('login.html', form=form)
+        if pyotp.TOTP(user.pinkey).verify(form.pin.data):
+            login_user(user)
 
-        login_user(user)
-
-        user.last_logged_in = user.current_logged_in
-        user.current_logged_in = datetime.now()
-        db.session.add(user)
-        db.session.commit()
+            user.last_logged_in = user.current_logged_in
+            user.current_logged_in = datetime.now()
+            db.session.add(user)
+            db.session.commit()
+        else:
+            flash("You have supplied an invalid 2FA token!")
 
         return account()
     return render_template('login.html', form=form)
