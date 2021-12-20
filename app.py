@@ -9,6 +9,8 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///climate-action.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'LongAndRandomSecretKey'
+app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeKXrcdAAAAADrogHmxHWzj4kDcX96dj7ZwY7Gl'
+app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeKXrcdAAAAABItn058xBgvnfJtlsDCle4Unv_m'
 
 # initialise database
 db = SQLAlchemy(app)
