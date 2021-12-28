@@ -28,7 +28,7 @@ def login():
             logging.warning('USER ACTIVITY - Invalid login attempt [%s]', request.remote_addr)
             flash('Please check your login details and try again')
             return render_template('login.html', form=form)
-        if pyotp.TOTP(user.pinkey).verify(form.pin.data):
+        if pyotp.TOTP(user.pin_key).verify(form.pin.data):
             login_user(user)
 
             # logging message about successful login
