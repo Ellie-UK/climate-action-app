@@ -2,6 +2,7 @@
 from datetime import datetime
 
 import flask
+import logging
 from flask import Blueprint, render_template, flash, redirect, url_for, request, session
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -23,10 +24,16 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
 
         if not user or not check_password_hash(user.password, form.password.data):
+            # logging message about unsuccessful login attempt
+            logging.warning('USER ACTIVITY - Invalid login attempt [%s]', request.remote_addr)
             flash('Please check your login details and try again')
             return render_template('login.html', form=form)
         if pyotp.TOTP(user.pinkey).verify(form.pin.data):
             login_user(user)
+
+            # logging message about successful login
+            logging.warning('USER ACTIVITY - Log in [%s, %s, %s, %s]', current_user.role, current_user.id,
+                            current_user.email, request.remote_addr)
 
             user.last_logged_in = user.current_logged_in
             user.current_logged_in = datetime.now()
@@ -61,6 +68,11 @@ def register():
         # add the new user to the database
         db.session.add(new_user)
         db.session.commit()
+
+        # logging message about user registration
+        logging.warning('USER ACTIVITY - User registration [%s %s, %s, %s]', form.firstname.data, form.lastname.data,
+                        form.email.data, request.remote_addr)
+
         # sends user to login page
         return redirect(url_for('users.login'))
 
@@ -95,6 +107,10 @@ def changepassword():
 @users_blueprint.route('/logout')
 @login_required
 def logout():
+    # logging message about user logout
+    logging.warning('USER ACTIVITY - Log out [%s, %s, %s, %s]', current_user.role, current_user.id, current_user.email,
+                    request.remote_addr)
+
     logout_user()
     return redirectpage("Logged out successfully", 3, url_for('index'))
 
@@ -108,6 +124,9 @@ def deleteaccount():
     try:
         db.session.delete(user_to_delete)
         db.session.commit()
+        # logging message about deleting a user account
+        logging.warning('USER ACTIVITY - Deleted user account [%s, %s %s, %s, %s]', user_to_delete.id,
+                        user_to_delete.firstname, user_to_delete.lastname, user_to_delete.email, request.remote_addr)
         return redirectpage("Account deleted successfully", 3, url_for('index'))
     except:
         return redirectpage("Something went wrong, please try again later", 3, url_for('index'))

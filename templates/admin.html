@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h2 class="title is-2">Admin page</h2>
+    <h3 class="subtitle is-5">Welcome {{ lastname }}</h3>
+
+    <div class="column is-10 is-offset-1">
+        <h4 class="title is-4">All users</h4>
+        <div class="box">
+            {% if all_users %}
+                <div class="field">
+                    <table class="table" style="margin-left: auto; margin-right: auto">
+                        <tr>
+                            <th>ID</th>
+                            <th>Email</th>
+                            <th>First name</th>
+                            <th>Last name</th>
+                            <th>Phone number</th>
+                            <th>User role</th>
+                        </tr>
+                        {% for user in all_users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.firstname }}</td>
+                                <td>{{ user.lastname }}</td>
+                                <td>{{ user.phone }}</td>
+                                <td>{{ user.role }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+            <form method="POST" action="/view_users">
+                <div>
+                    <button class="button is-info is-centered is-rounded">View all users</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="column is-8 is-offset-2">
+        <h4 class="title is-4">Security log</h4>
+        <div class="box">
+            {% if logs %}
+                <div class="field">
+                    <table class="table" style="margin-left: auto; margin-right: auto">
+                        <tr>
+                            <th>Last 15 records</th>
+                        </tr>
+                        {% for record in logs %}
+                            <tr>
+                                <td>{{ record }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <form method="POST" action="/seclog" target="_blank">
+                        <div>
+                            <button class="button">More</button>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+            <form method="POST" action="/logging">
+                <div>
+                    <button class="button is-info is-centered is-rounded">View security log</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
