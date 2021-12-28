@@ -35,6 +35,22 @@
                             <i class="fa fa-lock"></i>
                         </span>
                     </div>
+                    <div class="field">
+                    <label for="" class="label">PIN</label>
+                    <div class="control has-icon-left">
+                        {{ form.pin(class="input", placeholder="Time-Based PIN") }}
+                        {% for error in form.pin.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                    <div>
+                        {{ form.recaptcha }}
+                        {% for error in form.recaptcha.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+
                 </div>
                 <div class="field">
                     <label for="" class="checkbox">

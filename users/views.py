@@ -28,17 +28,19 @@ def login():
             logging.warning('USER ACTIVITY - Invalid login attempt [%s]', request.remote_addr)
             flash('Please check your login details and try again')
             return render_template('login.html', form=form)
+        if pyotp.TOTP(user.pinkey).verify(form.pin.data):
+            login_user(user)
 
-        login_user(user)
+            # logging message about successful login
+            logging.warning('USER ACTIVITY - Log in [%s, %s, %s, %s]', current_user.role, current_user.id,
+                            current_user.email, request.remote_addr)
 
-        # logging message about successful login
-        logging.warning('USER ACTIVITY - Log in [%s, %s, %s, %s]', current_user.role, current_user.id,
-                        current_user.email, request.remote_addr)
-
-        user.last_logged_in = user.current_logged_in
-        user.current_logged_in = datetime.now()
-        db.session.add(user)
-        db.session.commit()
+            user.last_logged_in = user.current_logged_in
+            user.current_logged_in = datetime.now()
+            db.session.add(user)
+            db.session.commit()
+        else:
+            flash("You have supplied an invalid 2FA token!")
 
         return account()
     return render_template('login.html', form=form)
