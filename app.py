@@ -1,9 +1,11 @@
 # IMPORTS
+import os
 import socket
 import logging
 from flask import Flask, render_template, request
 from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail
 from functools import wraps
 
 
@@ -16,6 +18,7 @@ class SecurityFilter(logging.Filter):
             return True
         else:
             return False
+
 
 fh = logging.FileHandler('user_logs.log', 'w')
 fh.setLevel(logging.WARNING)
@@ -35,8 +38,19 @@ app.config['SECRET_KEY'] = 'LongAndRandomSecretKey'
 app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeKXrcdAAAAADrogHmxHWzj4kDcX96dj7ZwY7Gl'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeKXrcdAAAAABItn058xBgvnfJtlsDCle4Unv_m'
 
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+print(os.environ.get('PLANET_EFFECT_USERNAME'))
+print(os.environ.get('PLANET_EFFECT_PASSWORD'))
+app.config['MAIL_USERNAME'] = os.environ.get('PLANET_EFFECT_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('PLANET_EFFECT_PASSWORD')
+
+
+mail = Mail(app)
 # initialise database
 db = SQLAlchemy(app)
+
 
 # ROLE ACCESS CONTROL
 def required_roles(*roles, source):
@@ -49,8 +63,11 @@ def required_roles(*roles, source):
                 # redirect user to 403 error page
                 return render_template('error_codes/403.html')
             return f(*args, **kwargs)
+
         return wrapped
+
     return wrapper
+
 
 # HOME PAGE VIEW
 @app.route('/')
@@ -72,9 +89,11 @@ if __name__ == '__main__':
 
     from models import User
 
+
     @login_manager.user_loader
     def load_user(id):
         return User.query.get(int(id))
+
 
     # BLUEPRINTS
     # import blueprints
