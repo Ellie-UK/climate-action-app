@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import Required, Email, Length, EqualTo
+from wtforms.validators import Required, Email, Length, EqualTo, ValidationError
+from models import User
 
 
 class LoginForm(FlaskForm):
@@ -26,4 +27,18 @@ class ChangePasswordForm(FlaskForm):
     current_password = PasswordField(validators=[Required()])
     new_password = PasswordField(validators=[Required(), Length(min=6, max=12, message='Password must be between 6 and 12 characters in length.')])
     confirm_new_password = PasswordField(validators=[Required(), EqualTo('new_password', message='Both password fields must be equal!')])
+    submit = SubmitField()
+
+class RequestResetForm(FlaskForm):
+    email = StringField(validators=[Required(), Email()])
+    submit = SubmitField()
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError('There is no account with that email. You must register first.')
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField(validators=[Required(), Length(min=6, max=12, message='Password must be between 6 and 12 characters in length.')])
+    confirm_password = PasswordField(validators=[Required(), EqualTo('password', message='Both password fields must be equal!')])
     submit = SubmitField()

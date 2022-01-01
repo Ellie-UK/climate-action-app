@@ -5,10 +5,11 @@ import flask
 import logging
 from flask import Blueprint, render_template, flash, redirect, url_for, request, session
 from flask_login import current_user, login_user, logout_user, login_required
+from flask_mail import Message
 
-from app import db
+from app import db, mail
 from models import User
-from users.forms import RegisterForm, LoginForm, ChangePasswordForm
+from users.forms import RegisterForm, LoginForm, ChangePasswordForm, ResetPasswordForm, RequestResetForm
 from werkzeug.security import check_password_hash, generate_password_hash
 import pyotp
 
@@ -102,6 +103,47 @@ def changepassword():
         db.session.commit()
         return redirectpage("Your password was changed successfully", 3, url_for('users.account'))
     return render_template('changepassword.html', form=form)
+
+def send_reset_email(user):
+    token = user.get_reset_token()
+    msg = Message('Password Reset Request',
+                  sender='noreply.planeteffect@gmail.com',
+                  recipients=[user.email])
+    msg.body = f'''To reset your password, visit the following link:
+{url_for('users.reset_token', token=token, _external=True)}
+If you did not make this request then simply ignore this email and no changes will be made.
+'''
+    mail.send(msg)
+
+
+@users_blueprint.route("/reset_password", methods=['GET', 'POST'])
+def reset_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = RequestResetForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        send_reset_email(user)
+        flash('An email has been sent with instructions to reset your password.', 'info')
+        return redirect(url_for('users.login'))
+    return render_template('reset_request.html', title='Reset Password', form=form)
+
+
+@users_blueprint.route("/reset_password/<token>", methods=['GET', 'POST'])
+def reset_token(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    user = User.verify_reset_token(token)
+    if user is None:
+        flash('That is an invalid or expired token', 'warning')
+        return redirect(url_for('users.reset_request'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.password = generate_password_hash(form.password.data)
+        db.session.commit()
+        flash('Your password has been updated! You are now able to log in', 'success')
+        return redirect(url_for('users.login'))
+    return render_template('reset_token.html', title='Reset Password', form=form)
 
 # view logout
 @users_blueprint.route('/logout')

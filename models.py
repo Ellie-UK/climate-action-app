@@ -1,11 +1,12 @@
 from datetime import datetime
 from flask_login import UserMixin, LoginManager
-from app import db
+from app import db, app
 from werkzeug.security import generate_password_hash
 import base64
 from Crypto.Protocol.KDF import scrypt
 from Crypto.Random import get_random_bytes
 from cryptography.fernet import Fernet
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 def encrypt(data, key):
     return Fernet(key).encrypt(bytes(data, 'utf-8'))
@@ -36,6 +37,21 @@ class User(db.Model, UserMixin):
 
     # crypto key for user
     encrypt_key = db.Column(db.BLOB)
+
+    def get_reset_token(self, expires_seconds=600):
+        # initialise serializer
+        s = Serializer(app.config['SECRET_KEY'], expires_seconds)
+        # create serializer payload
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
     def __init__(self, email, firstname, lastname, phone, password, pin_key, role):
         self.email = email

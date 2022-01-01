@@ -43,14 +43,13 @@
                             {{ error }}
                         {% endfor %}
                     </div>
+                    </div>
                 </div>
-                    <div>
+                <div>
                         {{ form.recaptcha }}
                         {% for error in form.recaptcha.errors %}
                             {{ error }}
                         {% endfor %}
-                    </div>
-
                 </div>
                 <div class="field">
                     <label for="" class="checkbox">
@@ -63,6 +62,16 @@
                     {{ form.submit(class="button is-info is-centered") }}
                 </div>
             </form>
+            <p class="control">
+                <a class="button is-warning is-centered" href="{{ url_for('users.reset_request') }}">
+                  <span class="icon">
+                    <i class="fas fa-sign-in-alt"></i>
+                  </span>
+                  <span>
+                    Forgot Password
+                  </span>
+                </a>
+            </p>
         </div>
     </div>
 {% endblock %}
