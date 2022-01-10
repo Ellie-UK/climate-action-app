@@ -72,6 +72,16 @@
               {% if current_user.is_authenticated %}
               <div class="field is-grouped">
               <p class="control">
+                <a class="button" href="{{ url_for('forum.create_forum') }}">
+                  <span class="icon">
+                    <i class="fas fa-comments"></i>
+                  </span>
+                  <span>
+                    Create Forum
+                  </span>
+                </a>
+              </p>
+              <p class="control">
                 <a class="button" href="{{ url_for('forum.forum') }}">
                   <span class="icon">
                     <i class="fas fa-comments"></i>
