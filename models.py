@@ -41,8 +41,9 @@ class User(db.Model, UserMixin):
     # crypto key for user
     encrypt_key = db.Column(db.BLOB)
 
-    # relationship between user and forum tables
+    # relationship between user, forum and comments tables
     forum = db.relationship('Forum')
+    comments = db.relationship('Comments', backref='id', lazy='dynamic')
 
     def get_reset_token(self, expires_seconds=600):
         # initialise serializer
@@ -75,7 +76,7 @@ class User(db.Model, UserMixin):
 
 
 class Forum(db.Model):
-    __tablename__ = 'Forum'
+    __tablename__ = 'forum'
 
     post_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.String, db.ForeignKey(User.id), nullable=True)
@@ -83,11 +84,30 @@ class Forum(db.Model):
     title = db.Column(db.Text, nullable=False, default=False)
     body = db.Column(db.Text, nullable=False, default=False)
 
+    # relationship with comments table
+    comments = db.relationship('Comments', backref='forum', lazy='dynamic')
+
     def __init__(self, user_id, title, body):
         self.user_id = user_id
         self.created = datetime.now()
         self.title = title
         self.body = body
+
+
+class Comments(db.Model):
+    __tablename__ = 'comments'
+
+    comment_id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    post_id = db.Column(db.Integer, db.ForeignKey(Forum.post_id))
+
+    def __init__(self, body, user_id, forum_id):
+        self.body = body
+        self.timestamp = datetime.now()
+        self.user_id = user_id
+        self.forum_id = forum_id
 
 
 def init_db():
