@@ -47,6 +47,16 @@ def data_collection(URL, FilePath):
 
     os.rename(old_name, new_name)
 
+def delete_datasets(FilePath_List):
+
+    for d in range(0,len(FilePath_List)):
+        # Check to see if file exists
+        if os.path.exists(FilePath_List[d]):
+            # delete file
+            os.remove(FilePath_List[d])
+        else:
+            print("File does not exist")
+
 def update_datasets():
 
     URL_List = [
@@ -57,6 +67,8 @@ def update_datasets():
     FilePath_List = [r"C:/Uni/CSC2033/Climate Datasets/temperature-change.csv",
                      r"C:/Uni/CSC2033/Climate Datasets/sea-level-rise.csv",
                      r"C:/Uni/CSC2033/Climate Datasets/co2-concentration.csv"]
+
+    delete_datasets(FilePath_List)
 
     for i in range(0, len(URL_List)):
         try:
