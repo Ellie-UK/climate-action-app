@@ -8,11 +8,14 @@ from Crypto.Random import get_random_bytes
 from cryptography.fernet import Fernet
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
+
 def encrypt(data, key):
     return Fernet(key).encrypt(bytes(data, 'utf-8'))
 
+
 def decrypt(data, key):
     return Fernet(key).decrypt(data).decode("utf-8")
+
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -38,6 +41,9 @@ class User(db.Model, UserMixin):
     # crypto key for user
     encrypt_key = db.Column(db.BLOB)
 
+    # relationship between user and forum tables
+    forum = db.relationship('Forum')
+
     def get_reset_token(self, expires_seconds=600):
         # initialise serializer
         s = Serializer(app.config['SECRET_KEY'], expires_seconds)
@@ -60,11 +66,28 @@ class User(db.Model, UserMixin):
         self.phone = phone
         self.password = generate_password_hash(password)
         self.pin_key = pin_key
-        self.encrypt_key = base64.urlsafe_b64encode(scrypt(password, str(get_random_bytes(32)), 32, N=2 ** 14, r=8, p=1))
+        self.encrypt_key = base64.urlsafe_b64encode(
+            scrypt(password, str(get_random_bytes(32)), 32, N=2 ** 14, r=8, p=1))
         self.role = role
         self.registered_on = datetime.now()
         self.last_logged_in = None
         self.current_logged_in = None
+
+
+class Forum(db.Model):
+    __tablename__ = 'Forum'
+
+    post_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String, db.ForeignKey(User.id), nullable=True)
+    created = db.Column(db.DateTime, nullable=False)
+    title = db.Column(db.Text, nullable=False, default=False)
+    body = db.Column(db.Text, nullable=False, default=False)
+
+    def __init__(self, user_id, title, body):
+        self.user_id = user_id
+        self.created = datetime.now()
+        self.title = title
+        self.body = body
 
 
 def init_db():
