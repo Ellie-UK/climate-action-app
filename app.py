@@ -99,9 +99,11 @@ if __name__ == '__main__':
     # import blueprints
     from users.views import users_blueprint
     from admin.views import admin_blueprint
+    from forum.views import forum_blueprint
 
     # register blueprints with app
     app.register_blueprint(users_blueprint)
     app.register_blueprint(admin_blueprint)
+    app.register_blueprint(forum_blueprint)
 
     app.run(host=my_host, port=free_port, debug=True)
