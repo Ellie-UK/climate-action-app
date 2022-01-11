@@ -51,7 +51,7 @@ def index():
 
 
 if __name__ == '__main__':
-    login_manager = LoginManager()
+    login_manager = LoginManager(app)
     login_manager.login_view = 'users.login'
     login_manager.init_app(app)
 
