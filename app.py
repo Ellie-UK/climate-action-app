@@ -9,63 +9,19 @@ from flask_mail import Mail
 from functools import wraps
 
 
-# LOGGING
-class SecurityFilter(logging.Filter):
-    def filter(self, record):
-        if "USER ACTIVITY" in record.getMessage():
-            return True
-        elif "SECURITY" in record.getMessage():
-            return True
-        else:
-            return False
 
-
-fh = logging.FileHandler('user_logs.log', 'w')
-fh.setLevel(logging.WARNING)
-fh.addFilter(SecurityFilter())
-formatter = logging.Formatter('%(asctime)s : %(message)s', '%d/%m/%Y %H:%M:%S')
-fh.setFormatter(formatter)
-
-logger = logging.getLogger('')
-logger.propagate = False
-logger.addHandler(fh)
 
 # CONFIG
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///climate-action.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'LongAndRandomSecretKey'
-app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeKXrcdAAAAADrogHmxHWzj4kDcX96dj7ZwY7Gl'
-app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeKXrcdAAAAABItn058xBgvnfJtlsDCle4Unv_m'
-
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-print(os.environ.get('PLANET_EFFECT_USERNAME'))
-print(os.environ.get('PLANET_EFFECT_PASSWORD'))
-app.config['MAIL_USERNAME'] = os.environ.get('PLANET_EFFECT_USERNAME')
-app.config['MAIL_PASSWORD'] = os.environ.get('PLANET_EFFECT_PASSWORD')
+app.config.from_object('config.DevConfig')
 
 mail = Mail(app)
 # initialise database
-db = SQLAlchemy(app)
+from models import db
+db.init_app(app)
 
 
-# ROLE ACCESS CONTROL
-def required_roles(*roles, source):
-    def wrapper(f):
-        @wraps(f)
-        def wrapped(*args, **kwargs):
-            if current_user.role not in roles:
-                logging.warning('SECURITY - Unauthorised access attempt to "%s" [%s, %s, %s]',
-                                source, current_user.id, current_user.email, request.remote_addr)
-                # redirect user to 403 error page
-                return render_template('error_codes/403.html')
-            return f(*args, **kwargs)
 
-        return wrapped
-
-    return wrapper
 
 
 # HOME PAGE VIEW
