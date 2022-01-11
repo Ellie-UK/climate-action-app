@@ -7,6 +7,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from functools import wraps
 
+import sys
+import logging
+
 # CONFIG
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///climate-action.db'
@@ -23,6 +26,9 @@ print(os.environ.get('PLANET_EFFECT_PASSWORD'))
 app.config['MAIL_USERNAME'] = os.environ.get('PLANET_EFFECT_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('PLANET_EFFECT_PASSWORD')
 
+# HEROKU LOGGING
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.ERROR)
 
 mail = Mail(app)
 # initialise database
