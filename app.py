@@ -47,7 +47,7 @@ def required_roles(*roles, source):
 # HOME PAGE VIEW
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', current_user=current_user)
 
 
 if __name__ == '__main__':
