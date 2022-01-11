@@ -86,6 +86,12 @@ def view_comments(post_id):
     return render_template('view_comments.html', comment=comments)
 
 
+@forum_blueprint.route('/<int:comment_id><int:post_id>/delete_comment')
+def delete_comment(comment_id, post_id):
+    Comments.query.filter_by(comment_id=comment_id).delete()
+    db.session.commit()
+
+    return view_comments(post_id)
 
 
 
