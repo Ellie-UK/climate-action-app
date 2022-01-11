@@ -83,7 +83,7 @@ def comment(post_id):
 @forum_blueprint.route('/<int:post_id>/view_comments')
 def view_comments(post_id):
     comments = Comments.query.filter_by(post_id=post_id).order_by(desc('post_id')).all()
-    return render_template('view_comments.html', comment=comments)
+    return render_template('view_comments.html', comment=comments, post_id=post_id)
 
 
 @forum_blueprint.route('/<int:comment_id><int:post_id>/delete_comment')
