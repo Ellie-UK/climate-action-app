@@ -94,7 +94,7 @@
               {% if not current_user.is_authenticated %}
               <div class="field is-grouped">
               <p class="control">
-                <a class="button" href="login.html">
+                <a class="button" href="{{ url_for('users.login') }}">
                   <span class="icon">
                     <i class="fas fa-sign-in-alt"></i>
                   </span>
