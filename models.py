@@ -42,7 +42,6 @@ class User(db.Model, UserMixin):
     encrypt_key = db.Column(db.BLOB)
 
     # relationship between user, forum and comments tables
-    forum = db.relationship('Forum')
     comments = db.relationship('Comments', backref='id', lazy='dynamic')
 
     def get_reset_token(self, expires_seconds=600):
@@ -103,11 +102,11 @@ class Comments(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     post_id = db.Column(db.Integer, db.ForeignKey(Forum.post_id))
 
-    def __init__(self, body, user_id, forum_id):
+    def __init__(self, body, user_id, post_id):
         self.body = body
         self.timestamp = datetime.now()
         self.user_id = user_id
-        self.forum_id = forum_id
+        self.post_id = post_id
 
 
 def init_db():

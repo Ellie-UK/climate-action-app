@@ -23,6 +23,8 @@
                                 <br>
                             <div id="navbarMenuHeroA" class="navbar-menu">
                                 <div class="navbar-start">
+                                    <a class="navbar-item" href="{{ url_for('forum.view_comments', post_id=forums.post_id) }}">View Comments</a>
+                                    <a class="navbar-item" href="{{ url_for('forum.comment', post_id=forums.post_id) }}">Add Comments</a>
                                     <a class="navbar-item" href="{{ url_for('forum.update', post_id=forums.post_id) }}">Update</a>
                                     <a class="navbar-item" href="{{ url_for('forum.delete', post_id=forums.post_id) }}">Delete</a>
                                 </div>

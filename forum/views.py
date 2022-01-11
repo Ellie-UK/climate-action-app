@@ -1,11 +1,11 @@
 import copy
-
-from flask import Blueprint, render_template
-from flask_login import login_required
+from flask import Blueprint, render_template, flash, redirect, url_for, request, current_app
+from flask_login import login_required, current_user
 from sqlalchemy import desc
 from app import db
+from comments.forms import CommentForm
 from forum.forms import ForumForm
-from models import Forum
+from models import Forum, Comments
 
 forum_blueprint = Blueprint('forum', __name__, template_folder='templates')
 
@@ -14,7 +14,6 @@ forum_blueprint = Blueprint('forum', __name__, template_folder='templates')
 @login_required
 def forum():
     posts = Forum.query.order_by(desc('user_id')).all()
-    print(posts)
     return render_template('forum.html', forum=posts)
 
 
@@ -23,7 +22,7 @@ def create():
     form = ForumForm()
 
     if form.validate_on_submit():
-        new_post = Forum(user_id=None, title=form.title.data, body=form.body.data)
+        new_post = Forum(user_id=current_user.id, title=form.title.data, body=form.body.data)
 
         db.session.add(new_post)
         db.session.commit()
@@ -64,3 +63,29 @@ def delete(post_id):
     db.session.commit()
 
     return forum()
+
+
+@forum_blueprint.route('/<int:post_id>/comment', methods=('GET', 'POST'))
+def comment(post_id):
+    post = Forum.query.filter_by(post_id=post_id).first()
+    form = CommentForm()
+    if form.validate_on_submit():
+
+        new_comment = Comments(body=form.body.data, user_id=post.user_id, post_id=post.post_id)
+
+        db.session.add(new_comment)
+        db.session.commit()
+
+        return forum()
+    return render_template('create_comment.html', form=form)
+
+
+@forum_blueprint.route('/<int:post_id>/view_comments')
+def view_comments(post_id):
+    comments = Comments.query.filter_by(post_id=post_id).order_by(desc('post_id')).all()
+    return render_template('view_comments.html', comment=comments)
+
+
+
+
+
