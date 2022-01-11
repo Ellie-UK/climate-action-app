@@ -114,6 +114,13 @@ def delete_datasets(FilePath_List):
         else:
             print("File does not exist")
 
+def clear_databases():
+
+    # Clear all data from climate change tables
+    models.Temp_Anomaly.query.delete()
+    models.Sea_Level_Rise.query.delete()
+    models.C02_Concentration.query.delete()
+
 def update_datasets():
 
     URL_List = [
@@ -134,6 +141,9 @@ def update_datasets():
         except:
             print("Unable to update Datasets")
             break
+
+    # Clear database before updating it
+    clear_databases()
 
     # Write new datasets to database
     write_to_database(FilePath_List)
