@@ -74,27 +74,25 @@ def index():
     return render_template('index.html')
 
 
-from models import User
 
-login_manager = LoginManager(app)
-login_manager.login_view = 'users.login'
-login_manager.init_app(app)
+if __name__ == '__main__':
+    from models import User
 
-@login_manager.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+    login_manager = LoginManager(app)
+    login_manager.login_view = 'users.login'
+    login_manager.init_app(app)
 
 
-    # BLUEPRINTS
-    # import blueprints
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
+
+
     from users.views import users_blueprint
     from admin.views import admin_blueprint
-    from forum.views import forum_blueprint
 
     # register blueprints with app
     app.register_blueprint(users_blueprint)
     app.register_blueprint(admin_blueprint)
-    app.register_blueprint(forum_blueprint)
 
-if __name__ == '__main__':
     app.run(debug=True)
