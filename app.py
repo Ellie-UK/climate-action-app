@@ -46,7 +46,6 @@ print(os.environ.get('PLANET_EFFECT_PASSWORD'))
 app.config['MAIL_USERNAME'] = os.environ.get('PLANET_EFFECT_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('PLANET_EFFECT_PASSWORD')
 
-
 mail = Mail(app)
 # initialise database
 db = SQLAlchemy(app)
@@ -76,28 +75,30 @@ def index():
 
 
 if __name__ == '__main__':
-  with app.app_context():
-      my_host = "127.0.0.1"
-      free_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-      free_socket.bind((my_host, 0))
-      free_socket.listen(5)
-      free_port = free_socket.getsockname()[1]
-      free_socket.close()
+    with app.app_context():
+        my_host = "127.0.0.1"
+        free_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        free_socket.bind((my_host, 0))
+        free_socket.listen(5)
+        free_port = free_socket.getsockname()[1]
+        free_socket.close()
 
-      from models import User
-      from users.views import users_blueprint
-      from admin.views import admin_blueprint
+        from models import User
+        from users.views import users_blueprint
+        from admin.views import admin_blueprint
 
-    # register blueprints with app
-      app.register_blueprint(users_blueprint)
-      app.register_blueprint(admin_blueprint)
+        # register blueprints with app
+        app.register_blueprint(users_blueprint)
+        app.register_blueprint(admin_blueprint)
 
-      login_manager = LoginManager()
-      login_manager.login_view = 'users.login'
-      login_manager.init_app(app)
+        login_manager = LoginManager()
+        login_manager.login_view = 'users.login'
+        login_manager.init_app(app)
 
-      @login_manager.user_loader
-      def load_user(id):
-          return User.query.get(int(id))
 
-      app.run(host=my_host, port=free_port, debug=True)
+        @login_manager.user_loader
+        def load_user(id):
+            return User.query.get(int(id))
+
+
+        app.run(host=my_host, port=free_port, debug=True)
