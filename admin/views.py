@@ -1,10 +1,23 @@
 from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 from models import User
-from app import required_roles
+from functools import wraps
 
 admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
 
+# ROLE ACCESS CONTROL
+def required_roles(*roles, source):
+    def wrapper(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            if current_user.role not in roles:
+                # redirect user to 403 error page
+                return render_template('error_codes/403.html')
+            return f(*args, **kwargs)
+
+        return wrapped
+
+    return wrapper
 
 # view admin page
 @admin_blueprint.route('/admin')
