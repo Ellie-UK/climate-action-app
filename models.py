@@ -23,16 +23,12 @@ class Sea_Level_Rise(db.Model):
     code = db.Column(db.String(100), nullable=True)
     day = db.Column(db.String, nullable=False)
     sea_level_rise_average = db.Column(db.Float, nullable=True)
-    sea_level_rise_cw2011 = db.Column(db.Float, nullable=True)
-    sea_level_rise_uhslcfd = db.Column(db.Float, nullable=True)
 
-    def __init__(self, entity, code, day, sea_level_rise_average, sea_level_rise_cw2011, sea_level_rise_uhslcfd):
+    def __init__(self, entity, code, day, sea_level_rise_average):
         self.entity = entity
         self.code = code
         self.day = day
         self.sea_level_rise_average = sea_level_rise_average
-        self.sea_level_rise_cw2011 = sea_level_rise_cw2011
-        self.sea_level_rise_uhslcfd = sea_level_rise_uhslcfd
 
 class Temp_Anomaly(db.Model):
     __tablename__ = 'temperature_anomaly'
