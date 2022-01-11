@@ -74,15 +74,19 @@ def index():
     return render_template('index.html')
 
 
-from models import User
 
-login_manager = LoginManager(app)
-login_manager.login_view = 'users.login'
-login_manager.init_app(app)
 
-@login_manager.user_loader
-def load_user(id):
-    return User.query.get(int(id))
+if __name__ == '__main__':
+    from models import User
+
+    login_manager = LoginManager(app)
+    login_manager.login_view = 'users.login'
+    login_manager.init_app(app)
+
+
+    @login_manager.user_loader
+    def load_user(id):
+        return User.query.get(int(id))
 
 
     # BLUEPRINTS
@@ -96,5 +100,4 @@ def load_user(id):
     app.register_blueprint(admin_blueprint)
     app.register_blueprint(forum_blueprint)
 
-if __name__ == '__main__':
     app.run(debug=True)
