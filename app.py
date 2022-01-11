@@ -1,14 +1,34 @@
 # IMPORTS
 import os
 import socket
+import logging
 from flask import Flask, render_template, request
 from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from functools import wraps
 
-import sys
-import logging
+
+# LOGGING
+class SecurityFilter(logging.Filter):
+    def filter(self, record):
+        if "USER ACTIVITY" in record.getMessage():
+            return True
+        elif "SECURITY" in record.getMessage():
+            return True
+        else:
+            return False
+
+
+fh = logging.FileHandler('user_logs.log', 'w')
+fh.setLevel(logging.WARNING)
+fh.addFilter(SecurityFilter())
+formatter = logging.Formatter('%(asctime)s : %(message)s', '%d/%m/%Y %H:%M:%S')
+fh.setFormatter(formatter)
+
+logger = logging.getLogger('')
+logger.propagate = False
+logger.addHandler(fh)
 
 # CONFIG
 app = Flask(__name__)
@@ -26,10 +46,6 @@ print(os.environ.get('PLANET_EFFECT_PASSWORD'))
 app.config['MAIL_USERNAME'] = os.environ.get('PLANET_EFFECT_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('PLANET_EFFECT_PASSWORD')
 
-# HEROKU LOGGING
-app.logger.addHandler(logging.StreamHandler(sys.stdout))
-app.logger.setLevel(logging.ERROR)
-
 mail = Mail(app)
 # initialise database
 db = SQLAlchemy(app)
@@ -41,6 +57,8 @@ def required_roles(*roles, source):
         @wraps(f)
         def wrapped(*args, **kwargs):
             if current_user.role not in roles:
+                logging.warning('SECURITY - Unauthorised access attempt to "%s" [%s, %s, %s]',
+                                source, current_user.id, current_user.email, request.remote_addr)
                 # redirect user to 403 error page
                 return render_template('error_codes/403.html')
             return f(*args, **kwargs)
@@ -53,29 +71,34 @@ def required_roles(*roles, source):
 # HOME PAGE VIEW
 @app.route('/')
 def index():
-    return render_template('index.html', current_user=current_user)
+    return render_template('index.html')
 
 
 if __name__ == '__main__':
-    login_manager = LoginManager(app)
-    login_manager.login_view = 'users.login'
-    login_manager.init_app(app)
+    with app.app_context():
+        my_host = "127.0.0.1"
+        free_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        free_socket.bind((my_host, 0))
+        free_socket.listen(5)
+        free_port = free_socket.getsockname()[1]
+        free_socket.close()
 
-    from models import User
+        from models import User
+        from users.views import users_blueprint
+        from admin.views import admin_blueprint
+
+        # register blueprints with app
+        app.register_blueprint(users_blueprint)
+        app.register_blueprint(admin_blueprint)
+
+        login_manager = LoginManager(app)
+        login_manager.login_view = 'users.login'
+        login_manager.init_app(app)
 
 
-    @login_manager.user_loader
-    def load_user(id):
-        return User.query.get(int(id))
+        @login_manager.user_loader
+        def load_user(id):
+            return User.query.get(int(id))
 
 
-    # BLUEPRINTS
-    # import blueprints
-    from users.views import users_blueprint
-    from admin.views import admin_blueprint
-
-    # register blueprints with app
-    app.register_blueprint(users_blueprint)
-    app.register_blueprint(admin_blueprint)
-
-    app.run(host='0.0.0.0', port=8080, debug=True)
+        app.run(host=my_host, port=free_port, debug=True)
