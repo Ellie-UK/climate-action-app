@@ -91,7 +91,7 @@ if __name__ == '__main__':
         app.register_blueprint(users_blueprint)
         app.register_blueprint(admin_blueprint)
 
-        login_manager = LoginManager()
+        login_manager = LoginManager(app)
         login_manager.login_view = 'users.login'
         login_manager.init_app(app)
 
