@@ -13,7 +13,7 @@ forum_blueprint = Blueprint('forum', __name__, template_folder='templates')
 @forum_blueprint.route('/forum')
 @login_required
 def forum():
-    posts = Forum.query.order_by(desc('user_id')).all()
+    posts = Forum.query.order_by(desc('post_id')).all()
     return render_template('forum.html', forum=posts)
 
 
@@ -71,7 +71,7 @@ def comment(post_id):
     form = CommentForm()
     if form.validate_on_submit():
 
-        new_comment = Comments(body=form.body.data, user_id=post.user_id, post_id=post.post_id)
+        new_comment = Comments(body=form.body.data, user_id=current_user.id, post_id=post_id)
 
         db.session.add(new_comment)
         db.session.commit()
