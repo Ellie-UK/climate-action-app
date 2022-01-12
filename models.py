@@ -1,5 +1,7 @@
 from datetime import datetime
 from flask_login import UserMixin, LoginManager
+from sqlalchemy.orm import backref
+
 from app import db, app
 from werkzeug.security import generate_password_hash
 import base64
@@ -41,8 +43,8 @@ class User(db.Model, UserMixin):
     # crypto key for user
     encrypt_key = db.Column(db.BLOB)
 
-    # relationship between user and comments tables
-    comments = db.relationship('Comments', cascade='all,delete-orphan', backref='users')
+    # relationship between user and comment tables
+    comment = db.relationship('Comments', backref='users')
 
     def get_reset_token(self, expires_seconds=600):
         # initialise serializer
@@ -78,12 +80,14 @@ class Forum(db.Model):
     __tablename__ = 'forum'
 
     post_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
     created = db.Column(db.DateTime, nullable=False)
     title = db.Column(db.Text, nullable=False, default=False)
     body = db.Column(db.Text, nullable=False, default=False)
 
     # relationship with comments table
-    comments = db.relationship('Comments', cascade="all,delete-orphan", backref='forum')
+    comments = db.relationship('Comments', back_populates='forum', cascade="all, delete",
+                               passive_deletes=True)
 
     def __init__(self, user_id, title, body):
         self.user_id = user_id
@@ -98,8 +102,11 @@ class Comments(db.Model):
     comment_id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
-    post_id = db.Column(db.Integer, db.ForeignKey(Forum.post_id))
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey(Forum.post_id, ondelete='CASCADE'), nullable=False)
+
+    # relationship with forum
+    forum = db.relationship('Forum', back_populates='comments')
 
     def __init__(self, body, user_id, post_id):
         self.body = body

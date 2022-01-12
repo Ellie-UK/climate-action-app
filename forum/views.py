@@ -14,7 +14,7 @@ forum_blueprint = Blueprint('forum', __name__, template_folder='templates')
 @login_required
 def forum():
     posts = Forum.query.order_by(desc('post_id')).all()
-    return render_template('forum.html', forum=posts)
+    return render_template('forum.html', forum=posts, user=current_user)
 
 
 @forum_blueprint.route('/create', methods=('GET', 'POST'))
@@ -34,8 +34,8 @@ def create():
 @forum_blueprint.route('/<int:post_id>/update', methods=('GET', 'POST'))
 def update(post_id):
     post = Forum.query.filter_by(post_id=post_id).first()
-    # if not post:
-        # return render_template('500.html')
+    if not post:
+        return render_template('500.html')
 
     form = ForumForm()
 
@@ -60,6 +60,7 @@ def update(post_id):
 @forum_blueprint.route('/<int:post_id>/delete')
 def delete(post_id):
     Forum.query.filter_by(post_id=post_id).delete()
+    Comments.query.filter_by(post_id=post_id).delete()
     db.session.commit()
 
     return forum()
