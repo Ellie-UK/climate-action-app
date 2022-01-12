@@ -2,10 +2,9 @@ import copy
 from flask import Blueprint, render_template, flash, redirect, url_for, request, current_app
 from flask_login import login_required, current_user
 from sqlalchemy import desc
-from app import db
 from comments.forms import CommentForm
 from forum.forms import ForumForm
-from models import Forum, Comments
+from models import Forum, Comments, db
 
 forum_blueprint = Blueprint('forum', __name__, template_folder='templates')
 
