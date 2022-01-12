@@ -6,10 +6,12 @@ from flask import Blueprint, render_template, flash, redirect, url_for, request,
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Message
 
+from mail import mail
 from models import User, db
 from users.forms import RegisterForm, LoginForm, ChangePasswordForm, ResetPasswordForm, RequestResetForm
 from werkzeug.security import check_password_hash, generate_password_hash
 import pyotp
+
 
 users_blueprint = Blueprint('users', __name__, template_folder='templates')
 

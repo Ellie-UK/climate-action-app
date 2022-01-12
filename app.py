@@ -5,7 +5,7 @@ import logging
 from flask import Flask, render_template, request
 from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
-from flask_mail import Mail
+
 from functools import wraps
 
 
@@ -15,7 +15,8 @@ from functools import wraps
 app = Flask(__name__)
 app.config.from_object('config.DevConfig')
 
-mail = Mail(app)
+from mail import mail
+mail.init_app(app)
 # initialise database
 from models import db
 db.init_app(app)
