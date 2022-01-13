@@ -18,3 +18,6 @@ cryptography~=35.0.0
 Flask-WTF
 email-validator
 selenium
+plotly
+pandas
+chart_studio
