@@ -1,7 +1,7 @@
-# CSC2033 Team 11 Climate Action App
+# Planet Effect
 
 <p align="center">
-CSC2033 Team 11 Climate Action App
+  <b>CSC2033 Team 11 Climate Action App</b>
 </p>
 <p align="center">
 <img src="/static/Logo.png" height="150" alt="(Planet Effect Logo)">
