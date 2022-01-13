@@ -17,7 +17,7 @@
 <div class="hero-head has-navbar-fixed-top">
     <nav class="navbar is-transparent is-fixed-top">
       <div class="navbar-brand">
-              <a class="navbar-item has-tooltip-bottom" data-tooltip="Click to go home">
+              <a class="navbar-item has-tooltip-bottom" data-tooltip="Click to go home" href="/">
 
                   <img src="../static/NavbarLogo.png" alt="Planet Effect" width="150" height="28">
 
@@ -31,9 +31,6 @@
 
       <div id="navbarA" class="navbar-menu">
         <div class="navbar-start">
-          <a class="navbar-item" href="/">
-            Home
-          </a>
           <a class="navbar-item" href="{{ url_for('users.climate_data') }}">
             Climate Change Data
           </a>
