@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="column is-6 is-offset-3">
+        <h1 class="title is-1">Forum</h1>
+        <div class="p-auto">
+            <a href="{{ url_for('forum.create') }}" class="button is-success is-rounded">
+                Create
+            </a>
+        </div>
+        <div class="box p-6">
+            {% for forums in forum %}
+                <article class="media">
+                    <div class="media-content">
+                        <div class="content">
+                            <h1>{{ forums.title }}</h1>
+                            <p>
+                                <strong>{{ forums.post_id }}</strong>
+                                <small>{{ forums.created.strftime('%d-%m-%Y') }}</small>
+                                <br>
+                                {{ forums.body }}
+                                <br>
+                            <div id="navbarMenuHeroA" class="navbar-menu">
+                                <div class="navbar-start">
+                                    <a class="navbar-item" href="{{ url_for('forum.view_comments', post_id=forums.post_id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-comment"></i>
+                                        </span>
+                                    </a>
+                                    <a class="navbar-item" href="{{ url_for('forum.update', post_id=forums.post_id) }}">
+                                        <span class="icon">
+                                            <i class="fa fa-paint-brush"></i>
+                                        </span>
+                                    </a>
+                                    <a class="navbar-item" href="{{ url_for('forum.delete', post_id=forums.post_id) }}">
+                                        <span class="icon">
+                                            <i class="fas fa-trash"></i>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            </p>
+                        </div>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
