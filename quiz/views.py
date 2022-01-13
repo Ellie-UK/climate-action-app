@@ -12,20 +12,34 @@ quiz_blueprint = Blueprint('quiz', __name__, template_folder='templates')
 @quiz_blueprint.route('/quiz')
 @login_required
 def quiz():
-    questions = Quiz.query.order_by(desc('question_id')).all()
+    questions = Quiz.query.all()
     return render_template('quiz.html', questions=questions)
+
+
+@quiz_blueprint.route('/quiz_home')
+@login_required
+def quiz_home():
+    session['result'] = ""
+    session['completed'] = ""
+    return render_template('quiz_home.html')
 
 
 @quiz_blueprint.route('/quiz', methods=["POST"])
 def submit():
-    question_id = request.form.get('qid')
-    answer = request.form.get('answer')
+    question_id = request.form.get('question_id')
+    user_answer = request.form.get('answer')
+    # answer = Quiz.query.filter_by(question_id=question_id).first()
 
     result = session['result']
-    result = result + question_id + ',' + answer + ','
+    result = result+question_id+','+user_answer+','
     session['result'] = result
 
-    return render_template('quiz.html')
+    completed = session['completed']
+    completed = completed+question_id+','
+    session['completed'] = completed
+    questions = Quiz.query.all()
+
+    return render_template('quiz.html', questions=questions, completed=completed)
 
 
 @quiz_blueprint.route('/create_question', methods=('GET', 'POST'))

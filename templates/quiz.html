@@ -12,14 +12,19 @@
             {% for question in questions %}
                 <article class="media">
                     <div class="media-content">
-                        <form method="POST" action={{url_for('quiz.submit')}}>
-                            <div class="question"><h5><input type="text" name="qid" value={{question.qid}}></h5></div>
+                        <form method="POST" action={{url_for('quiz.submit') }}>
+                        <div class="question"><h5>{{question.question_id}}</h5>
+                            <input type="text" name="question_id" value={{question.question_id}} style="border-style:none;"></div>
                         <div class="qst">{{question.question}}</div>
 	                        <div class="opt"><input type="radio" name="answer" value="1"> {{question.option1}}</div>
 	                        <div class="opt"><input type="radio" name="answer" value="2"> {{question.option2}}</div>
 	                        <div class="opt"><input type="radio" name="answer" value="3"> {{question.option3}}</div>
 	                        <div class="opt"><input type="radio" name="answer" value="4"> {{question.option4}}</div>
-	                        <input type="submit" value="Submit"/>
+                            {% for qid in completed %}
+                                {% if question.question_id != qid %}
+	                                <input type="submit" value="Submit"/>
+                                {% endif %}
+                            {% endfor %}
                         </form>
                     </div>
                 </article>

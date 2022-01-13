@@ -44,11 +44,17 @@ class User(db.Model, UserMixin):
     phone = db.Column(db.String(100), nullable=False)
     role = db.Column(db.String(100), nullable=False, default='user')
 
+    # Quiz information
+    score = db.Column(db.Integer, nullable=True)
+
     # crypto key for user
     encrypt_key = db.Column(db.BLOB)
 
     # relationship between user and comment tables
     comments = db.relationship('Comments', backref='users')
+
+    # relationship between user and results
+    results = db.relationship('Results', backref='users')
 
     def get_reset_token(self, expires_seconds=600):
         # initialise serializer
@@ -78,6 +84,7 @@ class User(db.Model, UserMixin):
         self.registered_on = datetime.now()
         self.last_logged_in = None
         self.current_logged_in = None
+        self.score = None
 
 
 class Forum(db.Model):
@@ -130,6 +137,9 @@ class Quiz(db.Model):
     option4 = db.Column(db.String, nullable=True)
     answer = db.Column(db.Integer, nullable=False)
 
+    # relationship between quiz and results
+    results = db.relationship('Results', backref='quiz')
+
     def __init__(self, question, option1, option2, option3, option4, answer):
         self.question = question
         self.option1 = option1
@@ -138,6 +148,19 @@ class Quiz(db.Model):
         self.option4 = option4
         self.answer = answer
 
+
+class Results(db.Model):
+    __tablename__ = 'results'
+
+    result_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
+    question_id = db.Column(db.Integer, db.ForeignKey(Quiz.question_id), nullable=False)
+    score = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, score, user_id, question_id):
+        self.score = score
+        self.user_id = user_id
+        self.question_id = question_id
 
 def init_db():
     db.drop_all()
