@@ -169,7 +169,7 @@ def db_empty():
         else:
             return True
     except:
-        return False
+        return True
 
 
 def init_db():
