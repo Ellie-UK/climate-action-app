@@ -58,14 +58,20 @@
                     {{ form.submit(class="button is-info is-centered") }}
                 </div>
             </div>
-                <div>
+                <style>
+                    div.g-recaptcha {
+                      margin: 0 auto;
+                      width: 304px;
+                    }
+                </style>
+                <div class="block">
                         {{ form.recaptcha }}
                         {% for error in form.recaptcha.errors %}
                             {{ error }}
                         {% endfor %}
                 </div>
             </form>
-            <p class="control">
+            <br>
                 <a class="button is-warning is-centered" href="{{ url_for('users.reset_request') }}">
                   <span class="icon">
                     <i class="fas fa-sign-in-alt"></i>
@@ -74,7 +80,6 @@
                     Forgot Password
                   </span>
                 </a>
-            </p>
         </div>
     </div>
 {% endblock %}
