@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from flask_login import UserMixin, LoginManager, current_user
 #from app import db, app
@@ -160,6 +161,12 @@ class Comments(db.Model):
         self.user_id = user_id
         self.post_id = post_id
 
+def db_empty():
+    db_size = os.stat("climate-action.db").st_size
+    if db_size > 100:
+        return False
+    else:
+        return True
 
 def init_db():
     db.drop_all()

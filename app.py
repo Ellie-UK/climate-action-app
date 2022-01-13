@@ -2,6 +2,7 @@
 import os
 import socket
 import logging
+import models
 from flask import Flask, render_template, request
 from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
@@ -51,4 +52,8 @@ app.register_blueprint(admin_blueprint)
 app.register_blueprint(forum_blueprint)
 
 if __name__ == '__main__':
+    if models.db_empty():
+        with app.app_context():
+            models.init_db()
+            print("DB empty, initialising defaults...")
     app.run(debug=True)
