@@ -21,3 +21,4 @@ selenium
 plotly
 pandas
 chart_studio
+schedule
