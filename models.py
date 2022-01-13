@@ -1,6 +1,5 @@
 from datetime import datetime
 from flask_login import UserMixin, LoginManager
-from app import db, app
 from werkzeug.security import generate_password_hash
 import base64
 from Crypto.Protocol.KDF import scrypt
@@ -118,6 +117,26 @@ class Comments(db.Model):
         self.timestamp = datetime.now()
         self.user_id = user_id
         self.post_id = post_id
+
+
+class Quiz(db.Model):
+    __tablename__ = ' quiz'
+
+    question_id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String, nullable=False)
+    option1 = db.Column(db.String, nullable=False)
+    option2 = db.Column(db.String, nullable=False)
+    option3 = db.Column(db.String, nullable=True)
+    option4 = db.Column(db.String, nullable=True)
+    answer = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, question, option1, option2, option3, option4, answer):
+        self.question = question
+        self.option1 = option1
+        self.option2 = option2
+        self.option3 = option3
+        self.option4 = option4
+        self.answer = answer
 
 
 def init_db():
