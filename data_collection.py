@@ -9,12 +9,14 @@ import chart_studio
 import chart_studio.plotly as py
 import chart_studio.tools as tls
 import pandas as pd
+import schedule
 import models
 from app import db
 from models import Temp_Anomaly, C02_Concentration, Sea_Level_Rise
 import csv
 import time
 import os
+import datetime
 
 def data_collections(URL, FilePath):
 
@@ -215,3 +217,12 @@ def graph_generator():
         chart_html = tls.get_embed(chart_url)
         print("Success: Graphs Generated")
         print(chart_html)
+
+def schedule_monthly_updates():
+    schedule.every().day.at('12:00').do(update_datasets)
+    while True:
+        if datetime.date.today().day != 1:
+            return
+
+        schedule.run_pending()
+        time.sleep(1)
