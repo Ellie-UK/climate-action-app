@@ -1,7 +1,7 @@
 import os
 
 class DevConfig:
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('PLANET_EFFECT_DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = 'LongAndRandomSecretKey'
 
