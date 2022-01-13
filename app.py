@@ -53,6 +53,9 @@ app.register_blueprint(users_blueprint)
 app.register_blueprint(admin_blueprint)
 app.register_blueprint(forum_blueprint)
 
+from models import db, init_db
+with app.app_context():
+    init_db()
 
 if __name__ == '__main__':
     app.run(debug=True)
