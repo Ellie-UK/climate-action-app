@@ -133,8 +133,8 @@ class Forum(db.Model):
 
     post_id = db.Column(db.Integer, primary_key=True)
     created = db.Column(db.DateTime, nullable=False)
-    title = db.Column(db.Text, nullable=False, default=False)
-    body = db.Column(db.Text, nullable=False, default=False)
+    title = db.Column(db.String(), nullable=False, default=False)
+    body = db.Column(db.String(), nullable=False, default=False)
 
     # relationship with comments table
     comments = db.relationship('Comments', cascade="all,delete-orphan", backref='forum')
@@ -150,7 +150,7 @@ class Comments(db.Model):
     __tablename__ = 'comments'
 
     comment_id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.Text, nullable=False)
+    body = db.Column(db.String(), nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     post_id = db.Column(db.Integer, db.ForeignKey(Forum.post_id))
