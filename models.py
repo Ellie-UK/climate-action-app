@@ -93,7 +93,7 @@ class User(db.Model, UserMixin):
     role = db.Column(db.String(100), nullable=False, default='user')
 
     # crypto key for user
-    encrypt_key = db.Column(db.BLOB)
+    encrypt_key = db.Column(db.String())
 
     # relationship between user and comments tables
     comments = db.relationship('Comments', cascade='all,delete-orphan', backref='users')
