@@ -6,6 +6,7 @@ import models
 from flask import Flask, render_template, request
 from flask_login import LoginManager, current_user
 from flask_sqlalchemy import SQLAlchemy
+from pathlib import Path
 
 from functools import wraps
 
@@ -40,6 +41,7 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
 
 # import blueprints
 from users.views import users_blueprint
