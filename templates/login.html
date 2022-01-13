@@ -10,7 +10,8 @@
                     </div>
                 {% endif %}
             {% endwith %}
-            <form method="post" class="box">
+            <form method="post">
+            <div class="box">
                 <div class="field">
                     {{ form.csrf_token() }}
                     <label for="" class="label">Email</label>
@@ -45,12 +46,7 @@
                     </div>
                     </div>
                 </div>
-                <div>
-                        {{ form.recaptcha }}
-                        {% for error in form.recaptcha.errors %}
-                            {{ error }}
-                        {% endfor %}
-                </div>
+
                 <div class="field">
                     <label for="" class="checkbox">
                         <input type="checkbox">
@@ -60,6 +56,13 @@
 
                 <div class="field">
                     {{ form.submit(class="button is-info is-centered") }}
+                </div>
+            </div>
+                <div>
+                        {{ form.recaptcha }}
+                        {% for error in form.recaptcha.errors %}
+                            {{ error }}
+                        {% endfor %}
                 </div>
             </form>
             <p class="control">
