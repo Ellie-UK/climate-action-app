@@ -156,6 +156,9 @@ def deleteaccount():
     except:
         return redirectpage("Something went wrong, please try again later", 3, url_for('index'))
 
+@users_blueprint.route('/climate_page')
+def climate_data():
+    return render_template('climate_data.html')
 
 @users_blueprint.route('/redirectpage', methods=['GET'])
 def redirectpage(message, wait, pointer):

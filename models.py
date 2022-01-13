@@ -15,13 +15,59 @@ from flask import render_template
 db = SQLAlchemy()
 
 
-
 def encrypt(data, key):
     return Fernet(key).encrypt(bytes(data, 'utf-8'))
 
 
 def decrypt(data, key):
     return Fernet(key).decrypt(data).decode("utf-8")
+
+class Sea_Level_Rise(db.Model):
+    __tablename__ = 'sea_level_rise'
+
+    id = db.Column(db.Integer, primary_key=True)
+    entity = db.Column(db.String(100), nullable=False)
+    code = db.Column(db.String(100), nullable=True)
+    day = db.Column(db.String(100), nullable=False)
+    sea_level_rise_average = db.Column(db.Float, nullable=True)
+
+    def __init__(self, entity, code, day, sea_level_rise_average):
+        self.entity = entity
+        self.code = code
+        self.day = day
+        self.sea_level_rise_average = sea_level_rise_average
+
+class Temp_Anomaly(db.Model):
+    __tablename__ = 'temperature_anomaly'
+
+    id = db.Column(db.Integer, primary_key=True)
+    Entity = db.Column(db.String(100), nullable=False)
+    Code = db.Column(db.String(100), nullable=True)
+    Day = db.Column(db.String(100), nullable=False)
+    Temperature_Anomaly = db.Column(db.Float, nullable=False)
+
+    def __init__(self, Entity, Code, Day, Temperature_Anomaly):
+        self.Entity = Entity
+        self.Code = Code
+        self.Day = Day
+        self.Temperature_Anomaly = Temperature_Anomaly
+
+class C02_Concentration(db.Model):
+    __tablename__ = 'co2_concentration'
+
+    id = db.Column(db.Integer, primary_key=True)
+    entity = db.Column(db.String(100), nullable=False)
+    code = db.Column(db.String(100), nullable=True)
+    day = db.Column(db.String, nullable=False)
+    average_co2_concentrations = db.Column(db.Float, nullable=True)
+    trend_co2_concentrations = db.Column(db.Float, nullable=True)
+
+    def __init__(self, entity, code, day, average_co2_concentrations, trend_co2_concentrations):
+        self.entity = entity
+        self.code = code
+        self.day = day
+        self.average_co2_concentrations = average_co2_concentrations
+        self.trend_co2_concentrations = trend_co2_concentrations
 
 
 class User(db.Model, UserMixin):
