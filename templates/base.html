@@ -31,6 +31,9 @@
           <a class="navbar-item" href="/">
             Home
           </a>
+          <a class="navbar-item" href="{{ url_for('users.climate_data') }}">
+            Climate Change Data
+          </a>
           {% if current_user.is_authenticated  and current_user.role == 'admin' %}
               <a class="navbar-item" href="{{ url_for('admin.admin') }}">
                   Admin
