@@ -4,7 +4,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.chrome.service import Service
-
+import plotly.express as px
+import chart_studio
+import chart_studio.plotly as py
+import chart_studio.tools as tls
+import pandas as pd
 import models
 from app import db
 from models import Temp_Anomaly, C02_Concentration, Sea_Level_Rise
@@ -98,9 +102,11 @@ def write_to_database(FilePath_List):
 
         db.session.commit()  # Commit records
         print("Success: Data written to database")
+        return True
     except:
         db.session.rollback()  # Rollback changes on error
         print("Rollback: Failed to write to database")
+        return False
     finally:
         db.session.close()
 
@@ -117,9 +123,17 @@ def delete_datasets(FilePath_List):
 def clear_databases():
 
     # Clear all data from climate change tables
-    models.Temp_Anomaly.query.delete()
-    models.Sea_Level_Rise.query.delete()
-    models.C02_Concentration.query.delete()
+    try:
+        models.Temp_Anomaly.query.delete()
+        models.Sea_Level_Rise.query.delete()
+        models.C02_Concentration.query.delete()
+        db.session.commit()
+        print("Success: Database cleared")
+        return True
+    except:
+        db.session.rollback()
+        print("Failure: Could not clear database")
+        return False
 
 def update_datasets():
 
@@ -143,7 +157,61 @@ def update_datasets():
             break
 
     # Clear database before updating it
-    clear_databases()
+    proceed = clear_databases()
+    if proceed:
+        # Write new datasets to database
+        proceed = write_to_database(FilePath_List)
+        if proceed:
+            graph_generator()
+        else:
+            print("Cannot proceed to generate graphs")
+    else:
+        print("Cannot proceed with write to database")
 
-    # Write new datasets to database
-    write_to_database(FilePath_List)
+def graph_generator():
+    # Graph data for temperature_anomaly
+    t_dates = [r for (r,) in Temp_Anomaly.query.with_entities(Temp_Anomaly.Day).filter(Temp_Anomaly.Entity == 'World').all()]
+    temperature = [r for (r,) in Temp_Anomaly.query.with_entities(Temp_Anomaly.Temperature_Anomaly).filter(Temp_Anomaly.Entity == 'World').all()]
+
+    # Graph data for sea_level_rise
+    s_dates = [r for (r,) in Sea_Level_Rise.query.with_entities(Sea_Level_Rise.day).all()]
+    sea_level = [r for (r,) in Sea_Level_Rise.query.with_entities(Sea_Level_Rise.sea_level_rise_average).all()]
+
+    # Graph data for c02_concentration
+    c_dates = [r for (r,) in C02_Concentration.query.with_entities(C02_Concentration.day).all()]
+    c02_con = [r for (r,) in C02_Concentration.query.with_entities(C02_Concentration.average_co2_concentrations).all()]
+
+    temp_anomaly_dataset = pd.DataFrame(dict(
+        Date=t_dates,
+        Temperature=temperature
+    ))
+
+    sea_level_rise_dataset = pd.DataFrame(dict(
+        Date=s_dates,
+        Sea_Level_Rise=sea_level
+    ))
+
+    c02_con_dataset = pd.DataFrame(dict(
+        Date=c_dates,
+        C02_Concentration=c02_con
+    ))
+
+    # Setup credentials for chart_studio account
+    username = 'Planet_Effect'
+    api_key = 'ur5Sf90VaEkiqZMxw5WJ'
+    chart_studio.tools.set_credentials_file(username=username, api_key=api_key)
+
+    combined_datasets = [temp_anomaly_dataset, sea_level_rise_dataset, c02_con_dataset]
+    titles = ["Temperature Anomaly", "Sea Level Rise", "C02 Concentration"]
+    y_axis = ["Temperature", "Sea_Level_Rise", "C02_Concentration"]
+    filenames = ["temperature_anomaly", "sea_level_rise", "c02_concentration"]
+
+    for i in range(0,len(combined_datasets)):
+        # Generate Graph
+        fig = px.line(combined_datasets[i], x="Date", y=y_axis[i], title=titles[i])
+        # Push graph to chart_studio
+        chart_url = py.plot(fig, filename=filenames[i], auto_open=True, show_link=False)
+        # Get html code for chart
+        chart_html = tls.get_embed(chart_url)
+        print("Success: Graphs Generated")
+        print(chart_html)
