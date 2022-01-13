@@ -27,9 +27,9 @@ class Sea_Level_Rise(db.Model):
     __tablename__ = 'sea_level_rise'
 
     id = db.Column(db.Integer, primary_key=True)
-    entity = db.Column(db.String(), nullable=False)
-    code = db.Column(db.String(), nullable=True)
-    day = db.Column(db.String(), nullable=False)
+    entity = db.Column(db.String(500), nullable=False)
+    code = db.Column(db.String(500), nullable=True)
+    day = db.Column(db.String(500), nullable=False)
     sea_level_rise_average = db.Column(db.Float, nullable=True)
 
     def __init__(self, entity, code, day, sea_level_rise_average):
@@ -42,9 +42,9 @@ class Temp_Anomaly(db.Model):
     __tablename__ = 'temperature_anomaly'
 
     id = db.Column(db.Integer, primary_key=True)
-    Entity = db.Column(db.String(), nullable=False)
-    Code = db.Column(db.String(), nullable=True)
-    Day = db.Column(db.String(), nullable=False)
+    Entity = db.Column(db.String(500), nullable=False)
+    Code = db.Column(db.String(500), nullable=True)
+    Day = db.Column(db.String(500), nullable=False)
     Temperature_Anomaly = db.Column(db.Float, nullable=False)
 
     def __init__(self, Entity, Code, Day, Temperature_Anomaly):
@@ -57,8 +57,8 @@ class C02_Concentration(db.Model):
     __tablename__ = 'co2_concentration'
 
     id = db.Column(db.Integer, primary_key=True)
-    entity = db.Column(db.String(), nullable=False)
-    code = db.Column(db.String(), nullable=True)
+    entity = db.Column(db.String(500), nullable=False)
+    code = db.Column(db.String(500), nullable=True)
     day = db.Column(db.String, nullable=False)
     average_co2_concentrations = db.Column(db.Float, nullable=True)
     trend_co2_concentrations = db.Column(db.Float, nullable=True)
@@ -77,9 +77,9 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
 
     # User authentication information.
-    email = db.Column(db.String(), nullable=False, unique=True)
-    password = db.Column(db.String(), nullable=False)
-    pin_key = db.Column(db.String(), nullable=False)
+    email = db.Column(db.String(500), nullable=False, unique=True)
+    password = db.Column(db.String(500), nullable=False)
+    pin_key = db.Column(db.String(500), nullable=False)
 
     # User activity information
     registered_on = db.Column(db.DateTime, nullable=False)
@@ -87,13 +87,13 @@ class User(db.Model, UserMixin):
     current_logged_in = db.Column(db.DateTime, nullable=True)
 
     # User information
-    firstname = db.Column(db.String(), nullable=False)
-    lastname = db.Column(db.String(), nullable=False)
-    phone = db.Column(db.String(), nullable=False)
-    role = db.Column(db.String(), nullable=False, default='user')
+    firstname = db.Column(db.String(500), nullable=False)
+    lastname = db.Column(db.String(500), nullable=False)
+    phone = db.Column(db.String(500), nullable=False)
+    role = db.Column(db.String(500), nullable=False, default='user')
 
     # crypto key for user
-    encrypt_key = db.Column(db.String())
+    encrypt_key = db.Column(db.String(500))
 
     # relationship between user and comments tables
     comments = db.relationship('Comments', cascade='all,delete-orphan', backref='users')
@@ -133,8 +133,8 @@ class Forum(db.Model):
 
     post_id = db.Column(db.Integer, primary_key=True)
     created = db.Column(db.DateTime, nullable=False)
-    title = db.Column(db.String(), nullable=False, default=False)
-    body = db.Column(db.String(), nullable=False, default=False)
+    title = db.Column(db.String(500), nullable=False, default=False)
+    body = db.Column(db.String(500), nullable=False, default=False)
 
     # relationship with comments table
     comments = db.relationship('Comments', cascade="all,delete-orphan", backref='forum')
@@ -150,7 +150,7 @@ class Comments(db.Model):
     __tablename__ = 'comments'
 
     comment_id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String(), nullable=False)
+    body = db.Column(db.String(500), nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     post_id = db.Column(db.Integer, db.ForeignKey(Forum.post_id))
