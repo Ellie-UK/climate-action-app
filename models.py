@@ -162,11 +162,15 @@ class Comments(db.Model):
         self.post_id = post_id
 
 def db_empty():
-    db_size = os.stat("climate-action.db").st_size
-    if db_size > 100:
+    try:
+        db_size = os.stat("climate-action.db").st_size
+        if db_size > 100:
+            return False
+        else:
+            return True
+    except:
         return False
-    else:
-        return True
+
 
 def init_db():
     db.drop_all()
