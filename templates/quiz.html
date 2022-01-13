@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="column is-6 is-offset-3">
+        <h1 class="title is-1">Quiz</h1>
+        <a href="{{ url_for('quiz.create_question') }}" class="button is-success is-rounded">
+                Add Question
+        </a>
+
+        <div class="box p-6">
+            {% for question in questions %}
+                <article class="media">
+                    <div class="media-content">
+                        <form method="POST" action={{url_for('quiz.submit')}}>
+                            <div class="question"><h5><input type="text" name="qid" value={{question.qid}}></h5></div>
+                        <div class="qst">{{question.question}}</div>
+	                        <div class="opt"><input type="radio" name="answer" value="1"> {{question.option1}}</div>
+	                        <div class="opt"><input type="radio" name="answer" value="2"> {{question.option2}}</div>
+	                        <div class="opt"><input type="radio" name="answer" value="3"> {{question.option3}}</div>
+	                        <div class="opt"><input type="radio" name="answer" value="4"> {{question.option4}}</div>
+	                        <input type="submit" value="Submit"/>
+                        </form>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
