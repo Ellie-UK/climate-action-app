@@ -3,7 +3,7 @@
 CSC2033 Team 11 Climate Action App
 
 
-<img src="/static/Logo.png" height="100" alt="(Planet Effect Logo)">
+<img src="/static/Logo.png" height="150" alt="(Planet Effect Logo)">
 
 
 Setup for Climate Data web scraping found in data_collection,py
