@@ -1,9 +1,10 @@
 import os
 
 class DevConfig:
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///climate-action.db'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = 'LongAndRandomSecretKey'
+
     RECAPTCHA_PUBLIC_KEY = '6LfWFA8eAAAAAC77HTZ2j_1N0eW5q2jN4B-MjIEy'
     RECAPTCHA_PRIVATE_KEY = '6LfWFA8eAAAAAGjnooP2HCUSpOr7I52kRjUpzKop'
 
