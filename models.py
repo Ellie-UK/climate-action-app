@@ -155,12 +155,11 @@ class Results(db.Model):
     result_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
     question_id = db.Column(db.Integer, db.ForeignKey(Quiz.question_id), nullable=False)
-    score = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, score, user_id, question_id):
-        self.score = score
+    def __init__(self, user_id, question_id):
         self.user_id = user_id
         self.question_id = question_id
+
 
 def init_db():
     db.drop_all()
