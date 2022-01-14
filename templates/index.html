@@ -14,7 +14,11 @@
 
         <div class="container" style="font-family:Helvetica,sans-serif">
           <h1 class="title">
-              Welcome to the <b>Planet Effect</b> website!
+              {% if current_user.is_authenticated %}
+                  Welcome to the <b>Planet Effect</b> website, {{ current_user.firstname }}!
+              {% else %}
+                  Welcome to the <b>Planet Effect</b> website!<br>Please <a href="{{ url_for('users.login') }}">log in</a> to gain access to the full site.
+              {% endif %}
           </h1>
         </div>
       </section>
