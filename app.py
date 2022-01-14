@@ -29,6 +29,11 @@ db.init_app(app)
 def index():
     return render_template('index.html')
 
+# ERROR PAGE VIEWS
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('error_codes/404.html', current_user=current_user), 404
+
 
 # initalise login manager
 from models import User
