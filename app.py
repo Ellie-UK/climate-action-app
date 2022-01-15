@@ -35,7 +35,7 @@ def page_not_found(error):
     return render_template('error_codes/404.html', current_user=current_user), 404
 
 
-# initalise login manager
+# initialise login manager
 from models import User
 
 login_manager = LoginManager(app)
