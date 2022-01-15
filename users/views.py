@@ -12,23 +12,45 @@ from users.forms import RegisterForm, LoginForm, ChangePasswordForm, ResetPasswo
 from werkzeug.security import check_password_hash, generate_password_hash
 import pyotp
 
-
 users_blueprint = Blueprint('users', __name__, template_folder='templates')
 
 
 # view user login
 @users_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
+    # if session attribute logins does not exist create attribute logins
+    if not session.get('logins'):
+        session['logins'] = 0
+    # if login attempts is 3 or more create an error message
+    elif session.get('logins') >= 3:
+        flash('Number of incorrect logins exceeded')
+
     form = LoginForm()
 
     if form.validate_on_submit():
+
+        # increase login attempts by 1
+        session['logins'] += 1
+
         user = User.query.filter_by(email=form.email.data).first()
 
         if not user or not check_password_hash(user.password, form.password.data):
             flash('Please check your login details and try again')
+
+            # if no match it would flash appropriate error message based on login attempts
+            if session['logins'] == 3:
+                flash('Number of incorrect logins exceeded')
+            elif session['logins'] == 2:
+                flash('Please check your login details and try again. 1 login attempt remaining')
+            else:
+                flash('Please check your login details and try again. 2 login attempts remaining')
+
             return render_template('login.html', form=form)
         if pyotp.TOTP(user.pin_key).verify(form.pin.data):
             login_user(user)
+
+            # if user is verified reset login attempts to 0
+            session['logins'] = 0
 
             user.last_logged_in = user.current_logged_in
             user.current_logged_in = datetime.now()
@@ -43,6 +65,8 @@ def login():
 
 @users_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
+    session['logins'] = 0
+
     form = RegisterForm()
     # if request method is POST or form is valid
     if form.validate_on_submit():
@@ -80,6 +104,7 @@ def account():
                            lastname=current_user.lastname,
                            phone=current_user.phone)
 
+
 @users_blueprint.route('/changepassword', methods=['GET', 'POST'])
 @login_required
 def changepassword():
@@ -93,6 +118,7 @@ def changepassword():
         db.session.commit()
         return redirectpage("Your password was changed successfully", 3, url_for('users.account'))
     return render_template('changepassword.html', form=form)
+
 
 def send_reset_email(user):
     token = user.get_reset_token()
@@ -135,12 +161,14 @@ def reset_token(token):
         return redirect(url_for('users.login'))
     return render_template('reset_token.html', title='Reset Password', form=form)
 
+
 # view logout
 @users_blueprint.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirectpage("Logged out successfully", 3, url_for('index'))
+
 
 @users_blueprint.route('/deleteaccount', methods=['POST', 'GET'])
 @login_required
@@ -156,9 +184,11 @@ def deleteaccount():
     except:
         return redirectpage("Something went wrong, please try again later", 3, url_for('index'))
 
+
 @users_blueprint.route('/climate_page')
 def climate_data():
     return render_template('climate_data.html')
+
 
 @users_blueprint.route('/redirectpage', methods=['GET'])
 def redirectpage(message, wait, pointer):
