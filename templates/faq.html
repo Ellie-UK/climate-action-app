@@ -2,6 +2,33 @@
 
 {% block content %}
 
-    <h1>content</h1>
+    <div class="column is-6 is-offset-3">
+        <h1 class="title is-1">Frequently asked question</h1>
+        {% if not questions %}
+            <h2 class="subtitle is-4">There are currently no questions</h2>
+        {% else %}
+            <div class="box">
+                {% for question in questions %}
+                    <article class="media">
+                        <div class="media-content">
+                            <div class="content">
+                                <h1>{{ question.question }}</h1>
+                                <p>
+                                    {% if not question.answer %}
+                                        <i>Waiting for answer</i>
+                                    {% else %}
+                                        {{ question.answer }}
+                                        {% if current_user.role == 'admin' %}
+                                            <br><b>BUTTONS</b>
+                                        {% endif %}
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
 
 {% endblock %}
