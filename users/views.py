@@ -20,10 +20,13 @@ users_blueprint = Blueprint('users', __name__, template_folder='templates')
 def login():
     # if session attribute logins does not exist create attribute logins
     if not session.get('logins'):
+        isDisabled = False
         session['logins'] = 0
     # if login attempts is 3 or more create an error message
     elif session.get('logins') >= 3:
+        isDisabled = True
         flash('Number of incorrect logins exceeded')
+
 
     form = LoginForm()
 
@@ -39,12 +42,16 @@ def login():
             # if no match it would flash appropriate error message based on login attempts
             if session['logins'] == 3:
                 flash('Number of incorrect logins exceeded')
+                isDisabled = True
             elif session['logins'] == 2:
                 flash('Please check your login details and try again. 1 login attempt remaining')
+                isDisabled = False
             else:
                 flash('Please check your login details and try again. 2 login attempts remaining')
+                isDisabled = False
+            return render_template('login.html', form=form, isDisabled=isDisabled)
 
-            return render_template('login.html', form=form)
+        isDisabled = False
         if pyotp.TOTP(user.pin_key).verify(form.pin.data):
             login_user(user)
 
@@ -59,7 +66,7 @@ def login():
             flash("You have supplied an invalid 2FA token!")
 
         return account()
-    return render_template('login.html', form=form)
+    return render_template('login.html', form=form, isDisabled=isDisabled)
 
 
 @users_blueprint.route('/register', methods=['GET', 'POST'])
