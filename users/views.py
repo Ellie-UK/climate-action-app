@@ -26,7 +26,9 @@ def login():
     elif session.get('logins') >= 3:
         isDisabled = True
         flash('Number of incorrect logins exceeded')
-
+    # if login attempt is 1 or 2
+    else:
+        isDisabled = False
 
     form = LoginForm()
 
