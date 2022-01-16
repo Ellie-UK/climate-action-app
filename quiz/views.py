@@ -84,9 +84,10 @@ def create_question():
     return render_template('create_quiz_q.html', form=form)
 
 
-@quiz_blueprint.route('/delete_results')
-def delete_results():
+@quiz_blueprint.route('/delete_quiz')
+def delete_quiz():
     Results.query.delete()
+    Quiz.query.delete()
     db.session.commit()
 
     return quiz()
