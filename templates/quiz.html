@@ -17,7 +17,7 @@
                 <article class="media">
                     <div class="media-content">
                         <form method="POST" action={{url_for('quiz.submit') }}>
-                        <div class="question"><h5>{{question.question_id}}</h5>
+                        <div class="question">
                             <input type="text" name="question_id" value={{question.question_id}} style="border-style:none;"></div>
                         <div class="qst">{{question.question}}</div>
 	                        <div class="opt"><input type="radio" name="answer" value="1"> {{question.option1}}</div>
@@ -30,6 +30,9 @@
                                 {% endif %}
                             {% endfor %}
                         </form>
+                        <a class="navbar-item" href="{{ url_for('quiz.update_question', question_id=question.question_id) }}">
+                            Edit
+                        </a>
                     </div>
                 </article>
             {% endfor %}

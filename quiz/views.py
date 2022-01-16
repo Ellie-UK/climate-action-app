@@ -116,3 +116,37 @@ def uncompleted():
                 uncompleted.remove(y)
 
     return uncompleted
+
+
+@quiz_blueprint.route('/<int:question_id>/update_question', methods=('GET', 'POST'))
+def update_question(question_id):
+    question = Quiz.query.filter_by(question_id=question_id).first()
+    if not question:
+        return render_template('500.html')
+
+    form = QuizForm()
+
+    if form.validate_on_submit():
+        Quiz.query.filter_by(question_id=question_id).update({"question": form.question.data})
+        Quiz.query.filter_by(question_id=question_id).update({"option1": form.option1.data})
+        Quiz.query.filter_by(question_id=question_id).update({"option2": form.option2.data})
+        Quiz.query.filter_by(question_id=question_id).update({"option3": form.option3.data})
+        Quiz.query.filter_by(question_id=question_id).update({"option4": form.option4.data})
+        Quiz.query.filter_by(question_id=question_id).update({"answer": form.answer.data})
+
+        db.session.commit()
+
+        return quiz()
+
+    # creates a copy of question object which is independent of database.
+    question_copy = copy.deepcopy(question)
+
+    # set update form with title and body of copied post object
+    form.question.data = question_copy.question
+    form.option1.data = question_copy.option1
+    form.option2.data = question_copy.option2
+    form.option3.data = question_copy.option3
+    form.option4.data = question_copy.option4
+    form.answer.data = question_copy.answer
+
+    return render_template('update_question.html', form=form)

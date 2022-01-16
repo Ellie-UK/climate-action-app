@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="column is-6 is-offset-3">
+        <h3 class="title is-3">Update question</h3>
+        <div class="box">
+            <form method="POST">
+                <div class="field">
+                    {{ form.csrf_token() }}
+                    <div class="control">
+                        {{ form.question(class="input", placeholder="Question") }}
+                        {% for error in form.question.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        {{ form.option1(class="textarea", placeholder="Option 1") }}
+                        {% for error in form.option1.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        {{ form.option2(class="textarea", placeholder="Option 2") }}
+                        {% for error in form.option2.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        {{ form.option3(class="textarea", placeholder="Option 3") }}
+                        {% for error in form.option3.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        {{ form.option4(class="textarea", placeholder="Option 4") }}
+                        {% for error in form.option2.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        {{ form.answer(class="integer", placeholder="Answer") }}
+                        {% for error in form.answer.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div>
+                    {{ form.submit(class="button is-info is-centered") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
