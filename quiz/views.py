@@ -32,15 +32,23 @@ def submit():
     question = Quiz.query.filter_by(question_id=question_id).first()
 
     if int(user_answer) == question.answer:
-        new_result = Results(user_id=current_user.id, question_id=question_id)
+        new_result = Results(user_id=current_user.id, question_id=question_id, correct=True)
+        db.session.add(new_result)
+        db.session.commit()
 
+    else:
+        new_result = Results(user_id=current_user.id, question_id=question_id, correct=False)
         db.session.add(new_result)
         db.session.commit()
 
     completed = Results.query.filter_by(user_id=current_user.id)
     questions = Quiz.query.all()
+    for x in completed:
+        for y in questions:
+            if x.question_id == y.question_id:
+                questions.remove(y)
 
-    return render_template('quiz.html', questions=questions, completed=completed)
+    return render_template('quiz.html', questions=questions)
 
 
 @quiz_blueprint.route('/create_question', methods=('GET', 'POST'))
@@ -56,3 +64,12 @@ def create_question():
 
         return quiz()
     return render_template('create_quiz_q.html', form=form)
+
+
+@quiz_blueprint.route('/delete_results')
+def delete_results():
+    Results.query.delete()
+    db.session.commit()
+
+    return quiz()
+

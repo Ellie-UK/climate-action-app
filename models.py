@@ -45,7 +45,8 @@ class User(db.Model, UserMixin):
     role = db.Column(db.String(100), nullable=False, default='user')
 
     # Quiz information
-    score = db.Column(db.Integer, nullable=True)
+    weekly_score = db.Column(db.Integer, nullable=True)
+    total_score = db.Column(db.Integer, nullable=True)
 
     # crypto key for user
     encrypt_key = db.Column(db.BLOB)
@@ -84,7 +85,8 @@ class User(db.Model, UserMixin):
         self.registered_on = datetime.now()
         self.last_logged_in = None
         self.current_logged_in = None
-        self.score = None
+        self.weekly_score = None
+        self.total_score = None
 
 
 class Forum(db.Model):
@@ -155,10 +157,12 @@ class Results(db.Model):
     result_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
     question_id = db.Column(db.Integer, db.ForeignKey(Quiz.question_id), nullable=False)
+    correct = db.Column(db.BOOLEAN, default=False)
 
-    def __init__(self, user_id, question_id):
+    def __init__(self, user_id, question_id, correct):
         self.user_id = user_id
         self.question_id = question_id
+        self.correct = correct
 
 
 def init_db():
