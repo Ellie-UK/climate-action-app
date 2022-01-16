@@ -10,59 +10,69 @@
                     </div>
                 {% endif %}
             {% endwith %}
-            <form method="post" class="box">
-                <div class="field">
-                    {{ form.csrf_token() }}
-                    <label for="" class="label">Email</label>
-                    <div class="control has-icons-left">
-                        {{ form.email(class="input", placeholder="bob@email.com") }}
-                        {% for error in form.email.errors %}
-                            {{ error }}
-                        {% endfor %}
-                        <span class="icon is-small is-left">
-                            <i class="fa fa-envelope"></i>
-                        </span>
-                    </div>
-                </div>
-                <div class="field">
-                    <label for="" class="label">Password</label>
-                    <div class="control has-icons-left">
-                        {{ form.password(class="input", placeholder="********") }}
-                        {% for error in form.password.errors %}
-                            {{ error }}
-                        {% endfor %}
-                        <span class="icon is-small is-left">
-                            <i class="fa fa-lock"></i>
-                        </span>
-                    </div>
-                    <div class="field">
-                    <label for="" class="label">PIN</label>
-                    <div class="control has-icon-left">
-                        {{ form.pin(class="input", placeholder="Time-Based PIN") }}
-                        {% for error in form.pin.errors %}
-                            {{ error }}
-                        {% endfor %}
-                    </div>
-                    </div>
-                </div>
-                <div>
-                        {{ form.recaptcha }}
-                        {% for error in form.recaptcha.errors %}
-                            {{ error }}
-                        {% endfor %}
-                </div>
-                <div class="field">
-                    <label for="" class="checkbox">
-                        <input type="checkbox">
-                        Remember me
-                    </label>
-                </div>
+                <form method="post">
+                    <div class="box">
 
-                <div class="field">
-                    {{ form.submit(class="button is-info is-centered") }}
-                </div>
-            </form>
-            <p class="control">
+                    <div class="field">
+                        {{ form.csrf_token() }}
+                        <label for="" class="label">Email</label>
+                        <div class="control has-icons-left">
+                            {{ form.email(class="input", placeholder="bob@email.com", disabled=isDisabled) }}
+                            {% for error in form.email.errors %}
+                                {{ error }}
+                            {% endfor %}
+                            <span class="icon is-small is-left">
+                                <i class="fa fa-envelope"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="" class="label">Password</label>
+                        <div class="control has-icons-left">
+                            {{ form.password(class="input", placeholder="********", disabled=isDisabled) }}
+                            {% for error in form.password.errors %}
+                                {{ error }}
+                            {% endfor %}
+                            <span class="icon is-small is-left">
+                                <i class="fa fa-lock"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="" class="label">PIN</label>
+                        <div class="control has-icons-left">
+                            {{ form.pin(class="input", placeholder="Time-Based PIN", disabled=isDisabled) }}
+                            {% for error in form.pin.errors %}
+                                {{ error }}
+                            {% endfor %}
+                            <span class="icon is-small is-left">
+                                <i class="fa fa-key"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        {{ form.submit(class="button is-info is-centered", disabled=isDisabled) }}
+                    </div>
+
+                    </div>
+                    <style>
+                        div.g-recaptcha {
+                          margin: 0 auto;
+                          width: 304px;
+                        }
+                    </style>
+                    <div class="block">
+                            {{ form.recaptcha }}
+                            {% for error in form.recaptcha.errors %}
+                                {{ error }}
+                            {% endfor %}
+                    </div>
+
+                </form>
+            <br>
                 <a class="button is-warning is-centered" href="{{ url_for('users.reset_request') }}">
                   <span class="icon">
                     <i class="fas fa-sign-in-alt"></i>
@@ -71,7 +81,6 @@
                     Forgot Password
                   </span>
                 </a>
-            </p>
         </div>
     </div>
 {% endblock %}

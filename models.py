@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from flask_login import UserMixin, LoginManager
 from werkzeug.security import generate_password_hash
@@ -14,13 +15,59 @@ from flask import render_template
 db = SQLAlchemy()
 
 
-
 def encrypt(data, key):
     return Fernet(key).encrypt(bytes(data, 'utf-8'))
 
 
 def decrypt(data, key):
     return Fernet(key).decrypt(data).decode("utf-8")
+
+class Sea_Level_Rise(db.Model):
+    __tablename__ = 'sea_level_rise'
+
+    id = db.Column(db.Integer, primary_key=True)
+    entity = db.Column(db.String(500), nullable=False)
+    code = db.Column(db.String(500), nullable=True)
+    day = db.Column(db.String(500), nullable=False)
+    sea_level_rise_average = db.Column(db.Float, nullable=True)
+
+    def __init__(self, entity, code, day, sea_level_rise_average):
+        self.entity = entity
+        self.code = code
+        self.day = day
+        self.sea_level_rise_average = sea_level_rise_average
+
+class Temp_Anomaly(db.Model):
+    __tablename__ = 'temperature_anomaly'
+
+    id = db.Column(db.Integer, primary_key=True)
+    Entity = db.Column(db.String(500), nullable=False)
+    Code = db.Column(db.String(500), nullable=True)
+    Day = db.Column(db.String(500), nullable=False)
+    Temperature_Anomaly = db.Column(db.Float, nullable=False)
+
+    def __init__(self, Entity, Code, Day, Temperature_Anomaly):
+        self.Entity = Entity
+        self.Code = Code
+        self.Day = Day
+        self.Temperature_Anomaly = Temperature_Anomaly
+
+class C02_Concentration(db.Model):
+    __tablename__ = 'co2_concentration'
+
+    id = db.Column(db.Integer, primary_key=True)
+    entity = db.Column(db.String(500), nullable=False)
+    code = db.Column(db.String(500), nullable=True)
+    day = db.Column(db.String, nullable=False)
+    average_co2_concentrations = db.Column(db.Float, nullable=True)
+    trend_co2_concentrations = db.Column(db.Float, nullable=True)
+
+    def __init__(self, entity, code, day, average_co2_concentrations, trend_co2_concentrations):
+        self.entity = entity
+        self.code = code
+        self.day = day
+        self.average_co2_concentrations = average_co2_concentrations
+        self.trend_co2_concentrations = trend_co2_concentrations
 
 
 class User(db.Model, UserMixin):
@@ -29,9 +76,9 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
 
     # User authentication information.
-    email = db.Column(db.String(100), nullable=False, unique=True)
-    password = db.Column(db.String(100), nullable=False)
-    pin_key = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(500), nullable=False, unique=True)
+    password = db.Column(db.String(500), nullable=False)
+    pin_key = db.Column(db.String(500), nullable=False)
 
     # User activity information
     registered_on = db.Column(db.DateTime, nullable=False)
@@ -39,17 +86,17 @@ class User(db.Model, UserMixin):
     current_logged_in = db.Column(db.DateTime, nullable=True)
 
     # User information
-    firstname = db.Column(db.String(100), nullable=False)
-    lastname = db.Column(db.String(100), nullable=False)
-    phone = db.Column(db.String(100), nullable=False)
-    role = db.Column(db.String(100), nullable=False, default='user')
+    firstname = db.Column(db.String(500), nullable=False)
+    lastname = db.Column(db.String(500), nullable=False)
+    phone = db.Column(db.String(500), nullable=False)
+    role = db.Column(db.String(500), nullable=False, default='user')
 
     # Quiz information
     weekly_score = db.Column(db.Integer, nullable=True)
     total_score = db.Column(db.Integer, nullable=True)
 
     # crypto key for user
-    encrypt_key = db.Column(db.BLOB)
+    encrypt_key = db.Column(db.String(500))
 
     # relationship between user and comment tables
     comments = db.relationship('Comments', backref='users')
@@ -95,8 +142,8 @@ class Forum(db.Model):
     post_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
     created = db.Column(db.DateTime, nullable=False)
-    title = db.Column(db.Text, nullable=False, default=False)
-    body = db.Column(db.Text, nullable=False, default=False)
+    title = db.Column(db.String(500), nullable=False, default=False)
+    body = db.Column(db.String(500), nullable=False, default=False)
 
     # relationship with comments table
     comments = db.relationship('Comments', back_populates='forum', cascade="all, delete",
@@ -113,7 +160,7 @@ class Comments(db.Model):
     __tablename__ = 'comments'
 
     comment_id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.Text, nullable=False)
+    body = db.Column(db.String(500), nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey(Forum.post_id, ondelete='CASCADE'), nullable=False)
@@ -126,6 +173,16 @@ class Comments(db.Model):
         self.timestamp = datetime.now()
         self.user_id = user_id
         self.post_id = post_id
+
+def db_empty():
+    try:
+        db_size = os.stat("climate-action.db").st_size
+        if db_size > 100:
+            return False
+        else:
+            return True
+    except:
+        return True
 
 
 class Quiz(db.Model):

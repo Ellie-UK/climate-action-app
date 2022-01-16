@@ -7,18 +7,19 @@
           <div class="columns">
               <div class="column is-2 is-offset-5">
                 <figure class="image is3by2">
-                     <img src="../static/Logo.png">
+                     <img src="../static/Logo.png" alt="Planet Effect">
                 </figure>
               </div>
           </div>
 
-        <div class="container">
+        <div class="container" style="font-family:Helvetica,sans-serif">
           <h1 class="title">
-            Hello World
+              {% if current_user.is_authenticated %}
+                  Welcome to the <b>Planet Effect</b> website, {{ current_user.firstname }}!
+              {% else %}
+                  Welcome to the <b>Planet Effect</b> website!<br>Please <a href="{{ url_for('users.login') }}">log in</a> to gain access to the full site.
+              {% endif %}
           </h1>
-          <p class="subtitle">
-            My first website with <strong>Bulma</strong>!
-          </p>
         </div>
       </section>
     </body>
