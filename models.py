@@ -161,6 +161,18 @@ class Comments(db.Model):
         self.user_id = user_id
         self.post_id = post_id
 
+
+class FAQ(db.Model):
+    __tablename__ = 'faq'
+
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String(500), nullable=False)
+    answer = db.Column(db.Text, nullable=True, default=None)
+
+    def __init__(self, question):
+        self.question = question
+
+
 def db_empty():
     try:
         db_size = os.stat("climate-action.db").st_size
