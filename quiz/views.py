@@ -1,7 +1,7 @@
 import copy
 from flask import Blueprint, render_template, flash, redirect, url_for, request, current_app, session
 from flask_login import login_required, current_user
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 from forum.forms import ForumForm
 from models import Forum, Comments, db, Quiz, User, Results
 from quiz.forms import QuizForm
@@ -9,7 +9,7 @@ from quiz.forms import QuizForm
 quiz_blueprint = Blueprint('quiz', __name__, template_folder='templates')
 
 
-@quiz_blueprint.route('/quiz')
+@quiz_blueprint.route('/quiz', methods=["GET"])
 @login_required
 def quiz():
     questions = Quiz.query.all()
@@ -19,7 +19,13 @@ def quiz():
         for y in questions:
             if x.question_id == y.question_id:
                 uncompleted.remove(y)
-    return render_template('quiz.html', questions=questions, uncompleted=uncompleted)
+    if len(uncompleted) == 0:
+        correct = Results.query.filter_by(user_id=current_user.id, correct=True).count()
+        question_length = len(questions)
+        txt = str(correct) + '/' + str(question_length)
+    else:
+        txt = 'Quiz not completed'
+    return render_template('quiz.html', questions=questions, uncompleted=uncompleted, result=txt)
 
 
 @quiz_blueprint.route('/quiz_home')
@@ -78,4 +84,3 @@ def delete_results():
     db.session.commit()
 
     return quiz()
-
