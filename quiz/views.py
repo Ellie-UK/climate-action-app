@@ -33,7 +33,18 @@ def quiz():
 def quiz_home():
     session['result'] = ""
     session['completed'] = ""
-    return render_template('quiz_home.html')
+    uncompleted()
+    questions = Quiz.query.all()
+    if len(uncompleted()) == 0:
+        correct = Results.query.filter_by(user_id=current_user.id, correct=True).count()
+        question_length = len(questions)
+        txt = str(correct) + '/' + str(question_length)
+        flag = True
+    else:
+        txt = 'Quiz not completed'
+        flag = False
+
+    return render_template('quiz_home.html', flag=flag, txt=txt)
 
 
 @quiz_blueprint.route('/quiz', methods=["POST"])
@@ -52,13 +63,8 @@ def submit():
         db.session.add(new_result)
         db.session.commit()
 
-    completed = Results.query.filter_by(user_id=current_user.id)
-    questions = Quiz.query.all()
-    uncompleted = Quiz.query.all()
-    for x in completed:
-        for y in questions:
-            if x.question_id == y.question_id:
-                uncompleted.remove(y)
+        questions = Quiz.query.all()
+        uncompleted()
 
     return render_template('quiz.html', questions=questions, uncompleted=uncompleted)
 
@@ -84,3 +90,29 @@ def delete_results():
     db.session.commit()
 
     return quiz()
+
+
+@quiz_blueprint.route('/finish_quiz', methods=('GET', 'POST'))
+def finish_quiz():
+    correct = Results.query.filter_by(user_id=current_user.id, correct=True).count()
+    User.query.filter_by(id=current_user.id).update({"weekly_score": correct})
+
+    if current_user.total_score is None:
+        User.query.filter_by(id=current_user.id).update({"total_score": correct})
+    else:
+        total_score = int(current_user.total_score) + correct
+        User.query.filter_by(id=current_user.id).update({"total_score": total_score})
+
+    db.session.commit()
+
+
+def uncompleted():
+    completed = Results.query.filter_by(user_id=current_user.id)
+    questions = Quiz.query.all()
+    uncompleted = Quiz.query.all()
+    for x in completed:
+        for y in questions:
+            if x.question_id == y.question_id:
+                uncompleted.remove(y)
+
+    return uncompleted

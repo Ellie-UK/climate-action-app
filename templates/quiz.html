@@ -34,6 +34,9 @@
                 </article>
             {% endfor %}
         </div>
+        <a href="{{ url_for('quiz.finish_quiz') }}" class="button is-success is-rounded">
+                Finish
+        </a>
     </div>
 
 {% endblock %}

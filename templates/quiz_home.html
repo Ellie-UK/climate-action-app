@@ -9,9 +9,14 @@
             Have you tried this weeks quiz?
           </h1>
             <div class="p-auto">
-                <a href="{{ url_for('quiz.quiz') }}" class="button is-success is-rounded is-large">
-                    Start
-                </a>
+                {% if flag == False %}
+                    <a href="{{ url_for('quiz.quiz') }}" class="button is-success is-rounded is-large">
+                        Start
+                    </a>
+                {% else %}
+                    <h3>You have already completed this quiz</h3>
+                    <h3>Your score: {{ txt }}</h3>
+                {% endif %}
             </div>
         </div>
       </section>
