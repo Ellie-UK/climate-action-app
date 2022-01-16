@@ -1,4 +1,5 @@
-from faq.forms import FAQFormQuestion
+import copy
+from faq.forms import FAQFormQuestion, FAQFormAnswer
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required
 from models import FAQ, db
@@ -25,3 +26,25 @@ def write_question():
 
         return redirect(url_for('faq.faq'))
     return render_template('faq_question.html', form=form)
+
+
+@faq_blueprint.route('/<int:id>/answer', methods=('GET', 'POST'))
+def write_answer(id):
+    question = FAQ.query.filter_by(id=id).first()
+
+    form = FAQFormAnswer()
+
+    if form.validate_on_submit():
+        FAQ.query.filter_by(id=id).update({"question": form.question.data})
+        FAQ.query.filter_by(id=id).update({"answer": form.answer.data})
+
+        db.session.commit()
+
+        return faq()
+
+    # if form isn't valid, create a copy to avoid database locking error
+    copy_question = copy.deepcopy(question)
+
+    form.original_question = copy_question.question
+
+    return render_template('faq_answer.html', form=form)
