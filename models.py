@@ -169,9 +169,8 @@ class FAQ(db.Model):
     question = db.Column(db.String(500), nullable=False)
     answer = db.Column(db.Text, nullable=True, default=None)
 
-    def __init__(self, question, answer):
+    def __init__(self, question):
         self.question = question
-        self.answer = answer
 
 
 def db_empty():

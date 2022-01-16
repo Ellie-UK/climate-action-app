@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="column is-6 is-offset-3">
+        <h3 class="title is-3">Ask a question</h3>
+        <div class="box">
+            <form method="POST">
+                <div class="field">
+                    {{ form.csrf_token() }}
+                    <div class="control">
+                        {{ form.question(class="input", placeholder="Question") }}
+                        {% for error in form.question.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div>
+                    {{ form.submit(class="button is-info is-centered") }}
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
