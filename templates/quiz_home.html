@@ -17,6 +17,9 @@
                     <h3>You have already completed this quiz</h3>
                     <h3>Your score: {{ txt }}</h3>
                 {% endif %}
+                <a href="{{ url_for('quiz.leaderboard') }}" class="button is-success is-rounded is-large">
+                    Leaderboard
+                </a>
             </div>
         </div>
       </section>

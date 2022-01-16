@@ -151,3 +151,10 @@ def update_question(question_id):
     form.answer.data = question_copy.answer
 
     return render_template('update_question.html', form=form)
+
+
+@quiz_blueprint.route('/leaderboard', methods=['GET'])
+def leaderboard():
+    top_10 = User.query.order_by(User.total_score.desc()).limit(10).all()
+
+    return render_template('leaderboard.html', top_10=top_10)
