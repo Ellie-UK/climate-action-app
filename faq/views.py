@@ -1,4 +1,5 @@
 import copy
+from admin.views import required_roles
 from faq.forms import FAQFormQuestion, FAQFormAnswer
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_required
@@ -15,6 +16,7 @@ def faq():
 
 
 @faq_blueprint.route('/question', methods=('GET', 'POST'))
+@login_required
 def write_question():
     form = FAQFormQuestion()
 
@@ -29,6 +31,8 @@ def write_question():
 
 
 @faq_blueprint.route('/<int:id>/answer', methods=('GET', 'POST'))
+@login_required
+@required_roles('admin', source='FAQ Page - answer question')
 def write_answer(id):
     question = FAQ.query.filter_by(id=id).first()
 
