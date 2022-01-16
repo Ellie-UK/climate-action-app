@@ -32,6 +32,10 @@ def write_question():
 def write_answer(id):
     question = FAQ.query.filter_by(id=id).first()
 
+    # redirect user to error 500 page if question doesn't exist
+    if not question:
+        return render_template('error_codes/500.html')
+
     form = FAQFormAnswer()
 
     if form.validate_on_submit():
