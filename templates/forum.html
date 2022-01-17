@@ -29,16 +29,18 @@
                                             <i class="fas fa-comment"></i>
                                         </span>
                                     </a>
-                                    <a class="navbar-item" href="{{ url_for('forum.update', post_id=forums.post_id) }}">
-                                        <span class="icon">
-                                            <i class="fa fa-paint-brush"></i>
-                                        </span>
-                                    </a>
-                                    <a class="navbar-item" href="{{ url_for('forum.delete', post_id=forums.post_id) }}">
-                                        <span class="icon">
-                                            <i class="fas fa-trash"></i>
-                                        </span>
-                                    </a>
+                                    {% if forums.user_id == current_user.id %}
+                                        <a class="navbar-item" href="{{ url_for('forum.update', post_id=forums.post_id) }}">
+                                            <span class="icon">
+                                                <i class="fa fa-paint-brush"></i>
+                                            </span>
+                                        </a>
+                                        <a class="navbar-item" href="{{ url_for('forum.delete', post_id=forums.post_id) }}">
+                                            <span class="icon">
+                                                <i class="fas fa-trash"></i>
+                                            </span>
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

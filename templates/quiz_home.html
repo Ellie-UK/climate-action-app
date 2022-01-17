@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <body>
+      <section class="container">
+        <div class="container">
+          <h1 class="title">
+            Have you tried this weeks quiz?
+          </h1>
+            <div class="p-auto">
+                {% if flag == False %}
+                    <a href="{{ url_for('quiz.quiz') }}" class="button is-success is-rounded is-large">
+                        Start
+                    </a>
+                {% else %}
+                    <h3>You have already completed this quiz</h3>
+                    <h3>Your score: {{ txt }}</h3>
+                {% endif %}
+                <a href="{{ url_for('quiz.leaderboard') }}" class="button is-success is-rounded is-large">
+                    Leaderboard
+                </a>
+            </div>
+        </div>
+      </section>
+    </body>
+
+{% endblock %}

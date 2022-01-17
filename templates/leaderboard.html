@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="leaderboard">
+    <body>
+        <section class="hero is-primary">
+          <div class="hero-body">
+            <div class="container">
+              <h1 class="title">
+                Leaderboard
+              </h1>
+            </div>
+          </div>
+        </section>
+
+        <div class = "container is-fluid">
+            <table class="table is-striped is-fullwidth" style="margin-left:auto;margin-right:auto;">
+                <thead style="text-align: center">
+                    <th style="text-align:center">Name</th>
+                    <th style="text-align:center">Score</th>
+                </thead>
+
+                {% for user in top_10 %}
+                <tr>
+                    <td style="text-align:center">{{user.firstname}}</td>
+                    <td style="text-align:center">{{user.total_score}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <h2>Your total score is: {{ current_user.total_score }}</h2>
+    </body>
+  </div>
+{% endblock %}

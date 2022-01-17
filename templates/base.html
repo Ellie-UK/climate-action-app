@@ -75,6 +75,16 @@
               {% if current_user.is_authenticated %}
               <div class="field is-grouped">
               <p class="control">
+                <a class="button" href="{{ url_for('quiz.quiz_home') }}">
+                  <span class="icon">
+                    <i class="fas fa-question"></i>
+                  </span>
+                  <span>
+                    Quiz
+                  </span>
+                </a>
+              </p>
+              <p class="control">
                 <a class="button" href="{{ url_for('faq.faq') }}">
                   <span class="icon">
                     <i class="fas fa-question-circle"></i>
