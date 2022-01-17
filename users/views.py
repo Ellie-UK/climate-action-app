@@ -117,7 +117,7 @@ def register():
         db.session.commit()
 
         # sends user to login page
-        return redirect(url_for('users.login'))
+        return redirectpage("Account created. You may now log in.", 3, url_for('users.login'))
 
     return render_template('register.html', form=form)
 
