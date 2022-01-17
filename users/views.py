@@ -109,7 +109,9 @@ def account():
                            email=current_user.email,
                            firstname=current_user.firstname,
                            lastname=current_user.lastname,
-                           phone=current_user.phone)
+                           phone=current_user.phone,
+                           registered=current_user.registered_on.strftime("%x"),
+                           role=current_user.role)
 
 
 @users_blueprint.route('/changepassword', methods=['GET', 'POST'])
