@@ -34,7 +34,7 @@ def create():
 def update(post_id):
     post = Forum.query.filter_by(post_id=post_id).first()
     if not post:
-        return render_template('500.html')
+        return render_template('error_codes/500.html')
 
     form = ForumForm()
 
