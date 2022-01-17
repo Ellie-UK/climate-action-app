@@ -18,7 +18,7 @@ class RegisterForm(FlaskForm):
     firstname = StringField(validators=[Required()])
     lastname = StringField(validators=[Required()])
     phone = StringField(validators=[Required()])
-    password = PasswordField(validators=[Required(), Length(min=6, max=12, message='Password must be between 6 and 12 characters in length.')])
+    password = PasswordField(validators=[Required(), Length(min=6, max=50, message='Password must be between 6 and 50 characters in length.')])
     confirm_password = PasswordField(validators=[Required(), EqualTo('password', message='Both password fields must be equal!')])
     pin_key = StringField(validators=[Required(), Length(min=32, max=32, message='pin key must be 32 characters in length.')])
     submit = SubmitField()
