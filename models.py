@@ -135,8 +135,8 @@ class User(db.Model, UserMixin):
         self.registered_on = datetime.now()
         self.last_logged_in = None
         self.current_logged_in = None
-        self.weekly_score = None
-        self.total_score = None
+        self.weekly_score = 0
+        self.total_score = 0
 
 
 class Forum(db.Model):
