@@ -13,8 +13,9 @@ from users.views import redirectpage
 
 admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
 
+
 # ROLE ACCESS CONTROL
-def required_roles(*roles, source):
+def required_roles(*roles):
     def wrapper(f):
         @wraps(f)
         def wrapped(*args, **kwargs):
@@ -31,7 +32,7 @@ def required_roles(*roles, source):
 # view admin page
 @admin_blueprint.route('/admin', methods=['GET', 'POST'])
 @login_required
-@required_roles('admin', source='Admin Page')
+@required_roles('admin')
 def admin():
     return render_template('admin.html', lastname=current_user.lastname)
 
@@ -39,7 +40,7 @@ def admin():
 # view all users
 @admin_blueprint.route('/view_users', methods=['POST'])
 @login_required
-@required_roles('admin', source='Admin Page - view users')
+@required_roles('admin')
 def view_users():
     return render_template('admin.html', lastname=current_user.lastname,
                            all_users=User.query.all())
@@ -48,7 +49,7 @@ def view_users():
 # send newsletter
 @admin_blueprint.route('/send_newsletter', methods=['GET', 'POST'])
 @login_required
-@required_roles('admin', source='Admin Page - send newsletter')
+@required_roles('admin')
 def send_newsletter():
     userList = []
     users = User.query.filter_by(subscribed=1)
