@@ -15,7 +15,7 @@
                     </a>
                 {% elif current_user.role == 'admin' %}
                     <a href="{{ url_for('quiz.quiz') }}" class="button is-success is-rounded is-large">
-                        Start
+                        Edit
                     </a>
                 {% else %}
                     <h3>You have already completed this quiz</h3>
