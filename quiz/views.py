@@ -63,10 +63,19 @@ def submit():
         db.session.add(new_result)
         db.session.commit()
 
-        questions = Quiz.query.all()
-        uncompleted()
+        # questions = Quiz.query.all()
 
-    return render_template('quiz.html', questions=questions, uncompleted=uncompleted)
+        completed = Results.query.filter_by(user_id=current_user.id)
+        questions = Quiz.query.all()
+        uncompleted = Quiz.query.all()
+        for x in completed:
+            for y in questions:
+                if x.question_id == y.question_id:
+                    uncompleted.remove(y)
+
+        question = Quiz.query.all()
+
+    return render_template('quiz.html', questions=question, uncompleted=uncompleted)
 
 
 @quiz_blueprint.route('/create_question', methods=('GET', 'POST'))
@@ -105,6 +114,9 @@ def finish_quiz():
         User.query.filter_by(id=current_user.id).update({"total_score": total_score})
 
     db.session.commit()
+    top_10 = User.query.order_by(User.total_score.desc()).limit(10).all()
+
+    return render_template('leaderboard.html', top_10=top_10)
 
 
 def uncompleted():
