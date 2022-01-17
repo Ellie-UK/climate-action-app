@@ -52,8 +52,12 @@ def submit():
     question_id = request.form.get('question_id')
     user_answer = request.form.get('answer')
     question = Quiz.query.filter_by(question_id=question_id).first()
+    print("fail")
 
-    if int(user_answer) == question.answer:
+    if user_answer is None:
+        pass
+
+    elif int(user_answer) == question.answer:
         new_result = Results(user_id=current_user.id, question_id=question_id, correct=True)
         db.session.add(new_result)
         db.session.commit()
