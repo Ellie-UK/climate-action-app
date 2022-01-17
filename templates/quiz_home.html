@@ -9,7 +9,11 @@
             Have you tried this weeks quiz?
           </h1>
             <div class="p-auto">
-                {% if flag == False %}
+                {% if flag == False  %}
+                    <a href="{{ url_for('quiz.quiz') }}" class="button is-success is-rounded is-large">
+                        Start
+                    </a>
+                {% elif current_user.role == 'admin' %}
                     <a href="{{ url_for('quiz.quiz') }}" class="button is-success is-rounded is-large">
                         Start
                     </a>
