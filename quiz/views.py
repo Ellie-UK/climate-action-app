@@ -65,17 +65,15 @@ def submit():
 
         # questions = Quiz.query.all()
 
-        completed = Results.query.filter_by(user_id=current_user.id)
-        questions = Quiz.query.all()
-        uncompleted = Quiz.query.all()
-        for x in completed:
-            for y in questions:
-                if x.question_id == y.question_id:
-                    uncompleted.remove(y)
+    completed = Results.query.filter_by(user_id=current_user.id)
+    questions = Quiz.query.all()
+    uncompleted = Quiz.query.all()
+    for x in completed:
+        for y in questions:
+            if x.question_id == y.question_id:
+                uncompleted.remove(y)
 
-        question = Quiz.query.all()
-
-    return render_template('quiz.html', questions=question, uncompleted=uncompleted)
+    return render_template('quiz.html', questions=questions, uncompleted=uncompleted)
 
 
 @quiz_blueprint.route('/create_question', methods=('GET', 'POST'))
