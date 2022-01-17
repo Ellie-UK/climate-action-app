@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="columns">
+        <div class="column is-half is-offset-one-quarter">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="notification is-danger">
+                        {{ messages[0] }}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <h4 class="title is-4">Newsletter</h4>
+            <form method="post" class="box">
+                <div class="field">
+                    {{ form.csrf_token() }}
+                    <label for="" class="label">Subject</label>
+                    <div class="control">
+                        {{ form.subject(class="input", placeholder="Subject") }}
+                        {% for error in form.subject.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="" class="label">Body</label>
+                    <div class="control">
+                        {{ form.body(class="textarea", placeholder="Body") }}
+                        {% for error in form.body.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="field">
+                    {{ form.submit(class="button is-info is-centered") }}
+                </div>
+            </form>
+    </div>
+    </div>
+    <a class="button is-danger" href="{{ url_for('admin.admin') }}">
+
+                  <span>Go Back</span>
+    </a>
+{% endblock %}
