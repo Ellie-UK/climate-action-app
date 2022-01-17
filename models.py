@@ -92,6 +92,9 @@ class User(db.Model, UserMixin):
     phone = db.Column(db.String(500), nullable=False)
     role = db.Column(db.String(500), nullable=False, default='user')
 
+    # Newsletter
+    subscribed = db.Column(db.Integer, nullable=False, default=0)
+
     # crypto key for user
     encrypt_key = db.Column(db.String(500))
 
