@@ -5,6 +5,7 @@ import flask
 from flask import Blueprint, render_template, flash, redirect, url_for, request, session
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Message
+from sqlalchemy import text, select
 
 from mail import mail
 from models import User, db
@@ -14,6 +15,26 @@ import pyotp
 
 users_blueprint = Blueprint('users', __name__, template_folder='templates')
 
+
+def check_subscription(user_id):
+    subUser = User.query.filter_by(id=user_id).first()
+    return subUser.subscribed == 1
+
+def get_subscribed():
+    users = User.query.filter_by(subscribed=1)
+    for user in users:
+        print(user.email)
+
+def send_reset_email(user):
+    token = user.get_reset_token()
+    msg = Message('Password Reset Request',
+                  sender='noreply.planeteffect@gmail.com',
+                  recipients=[user.email])
+    msg.body = f'''To reset your password, visit the following link:
+{url_for('users.reset_token', token=token, _external=True)}
+If you did not make this request then simply ignore this email and no changes will be made.
+'''
+    mail.send(msg)
 
 # view user login
 @users_blueprint.route('/login', methods=['GET', 'POST'])
@@ -73,8 +94,9 @@ def login():
 
 @users_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
-
     form = RegisterForm()
+    generated_pin = pyotp.random_base32()
+
     # if request method is POST or form is valid
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -96,9 +118,9 @@ def register():
         db.session.commit()
 
         # sends user to login page
-        return redirect(url_for('users.login'))
+        return redirectpage("Account created. You may now log in.", 3, url_for('users.login'))
 
-    return render_template('register.html', form=form)
+    return render_template('register.html', form=form, generated_pin=generated_pin)
 
 
 @users_blueprint.route('/account')
@@ -111,7 +133,8 @@ def account():
                            lastname=current_user.lastname,
                            phone=current_user.phone,
                            registered=current_user.registered_on.strftime("%x"),
-                           role=current_user.role)
+                           role=current_user.role,
+                           user_subscribed=check_subscription(current_user.id))
 
 
 @users_blueprint.route('/changepassword', methods=['GET', 'POST'])
@@ -129,16 +152,6 @@ def changepassword():
     return render_template('changepassword.html', form=form)
 
 
-def send_reset_email(user):
-    token = user.get_reset_token()
-    msg = Message('Password Reset Request',
-                  sender='noreply.planeteffect@gmail.com',
-                  recipients=[user.email])
-    msg.body = f'''To reset your password, visit the following link:
-{url_for('users.reset_token', token=token, _external=True)}
-If you did not make this request then simply ignore this email and no changes will be made.
-'''
-    mail.send(msg)
 
 
 @users_blueprint.route("/reset_password", methods=['GET', 'POST'])
@@ -198,6 +211,16 @@ def deleteaccount():
 def climate_data():
     return render_template('climate_data.html')
 
+
+@users_blueprint.route('/modify_subscription')
+def modify_subscription():
+    current_user.subscribed = 1 - current_user.subscribed
+
+    db.session.commit()
+    if check_subscription(current_user.id):
+        return redirectpage("Subscribed successfully!", 3, url_for('users.account'))
+    else:
+        return redirectpage("Unsubscribed successfully!", 3, url_for('users.account'))
 
 @users_blueprint.route('/redirectpage', methods=['GET'])
 def redirectpage(message, wait, pointer):

@@ -87,7 +87,7 @@
                 <div class="field">
                     <label for="" class="label">Pin Key</label>
                     <div class="control has-icons-left">
-                        {{ form.pin_key(class="input", placeholder="PIN Key") }}
+                        {{ form.pin_key(class="input", placeholder="PIN Key", value=generated_pin) }}
                         {% for error in form.pin_key.errors %}
                             {{ error }}
                         {% endfor %}
