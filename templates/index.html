@@ -3,25 +3,26 @@
 {% block content %}
 
     <body>
-      <section class="container">
-          <div class="columns">
-              <div class="column is-2 is-offset-5">
+    <section class="block">
+        <div class="columns">
+            <div class="column is-2 is-offset-5">
                 <figure class="image is3by2">
-                     <img src="../static/Logo.png" alt="Planet Effect">
+                    <img src="../static/Logo.png" alt="Planet Effect">
                 </figure>
-              </div>
-          </div>
+            </div>
+        </div>
 
         <div class="container" style="font-family:Helvetica,sans-serif">
-          <h1 class="title">
-              {% if current_user.is_authenticated %}
-                  Welcome to the <b>Planet Effect</b> website, {{ current_user.firstname }}!
-              {% else %}
-                  Welcome to the <b>Planet Effect</b> website!<br>Please <a href="{{ url_for('users.login') }}">log in</a> to gain access to the full site.
-              {% endif %}
-          </h1>
+            <h1 class="title">
+                {% if current_user.is_authenticated %}
+                    Welcome to the <b>Planet Effect</b> website, {{ current_user.firstname }}!
+                {% else %}
+                    Welcome to the <b>Planet Effect</b> website!<br>Please
+                    <a href="{{ url_for('users.login') }}">log in</a> to gain access to the full site.
+                {% endif %}
+            </h1>
         </div>
-      </section>
+    </section>
     </body>
 
 {% endblock %}

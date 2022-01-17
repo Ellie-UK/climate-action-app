@@ -3,68 +3,110 @@
 {% block content %}
     <div class="block is-vcentered is-centered">
         <div class="column is-10 is-offset-1">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="notification is-danger">
-                    {{ messages[0] }}
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="notification is-danger">
+                        {{ messages[0] }}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div class="block is-vcentered is-centered">
+            <h1 class="title is-1">
+                Welcome, {{ firstname }}
+            </h1>
+        </div>
+    </div>
+    <div class="block">
+    <div class="column is-half is-offset-one-quarter">
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">ID</p>
+                    <p class="title">{{ acc_no }}</p>
                 </div>
-            {% endif %}
-        {% endwith %}
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Role</p>
+                    <p class="title">{{ role }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Phone</p>
+                    <p class="title">{{ phone }}</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Registered on</p>
+                    <p class="title">{{ registered }}</p>
+                </div>
+            </div>
+        </nav>
+            </div>
+    </div>
+
+    <br>
+
+    <div class="block">
+        <div class="block is-vcentered is-centered">
+            <div class="buttons is-centered">
+
+                <a class="button is-primary" href="{{ url_for('users.changepassword') }}">
+                    <strong>Change password</strong>
+                </a>
+
+                <a class="button is-danger open-modal" data-modal-id="#my-modal">
+                    <strong>Delete Account</strong>
+                </a>
+            </div>
         </div>
-    <div class="block is-vcentered is-centered">
-            <h1 class="title">
-            Welcome, {{ firstname }}
-        </h1>
+        <p>
+
+        </p>
     </div>
-    <div class="block is-vcentered is-centered">
-        <div class="buttons is-centered">
-            <a class="button is-primary" href="{{ url_for('users.changepassword') }}">
-                <strong>Change password</strong>
-            </a>
+    <div id="my-modal" class="modal" aria-hidden="">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Account deletion</p>
+            </header>
+
+            <section class="modal-card-body">
+                <div class="content">
+                    <h1>Are you sure?</h1>
+                    <p>
+                        This will permanently delete your account and data. There will be no way of retrieving it.
+                    </p>
+
+                </div>
+            </section>
+            <footer class="modal-card-foot">
+                <div class="container is-grouped is-centered has-text-centered">
+                <a class="button is-danger" href="{{ url_for('users.deleteaccount') }}">
+                    <strong>Delete account</strong>
+                </a>
+                <a aria-label="close" class="button is-info close-modal" data-modal-id="#my-modal">
+                    Cancel
+                </a>
+                    </div>
+            </footer>
+
         </div>
-    </div>
-    <p>
-        <a class="button is-danger open-modal" data-modal-id="#my-modal"><strong>Delete Account</strong></a>
-    </p>
-    </div>
-    <div id = "my-modal" class = "modal" aria-hidden="">
-               <div class = "modal-background"></div>
-               <div class = "modal-card">
-                  <header class = "modal-card-head">
-                     <p class = "modal-card-title">Account deletion</p>
-                  </header>
-
-                  <section class = "modal-card-body">
-                     <div class = "content">
-                        <h1>Are you sure?</h1>
-                        <p>
-                           This will permanently delete your account and data. There will be no way of retrieving it.
-                        </p>
-
-                     </div>
-                  </section>
-                   <footer class="modal-card-foot">
-                       <a class="button is-danger" href="{{ url_for('users.deleteaccount') }}">
-                           <strong>Delete account</strong>
-                       </a>
-                       <a aria-label="close" class="button is-info close-modal" data-modal-id="#my-modal">
-                           Cancel
-                       </a>
-                   </footer>
-
-               </div>
-    <script>
-         function toggleModalClasses(event) {
-             var modalId = event.currentTarget.dataset.modalId;
-             var modal = $(modalId);
-             modal.toggleClass('is-active');
-             $('html').toggleClass('is-clipped');
+        <script>
+            function toggleModalClasses(event) {
+                var modalId = event.currentTarget.dataset.modalId;
+                var modal = $(modalId);
+                modal.toggleClass('is-active');
+                $('html').toggleClass('is-clipped');
             }
 
             $('.open-modal').click(toggleModalClasses);
 
             $('.close-modal').click(toggleModalClasses);
-    </script>
+        </script>
     </div>
 
 {% endblock %}

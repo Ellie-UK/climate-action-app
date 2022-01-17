@@ -95,6 +95,9 @@ class User(db.Model, UserMixin):
     weekly_score = db.Column(db.Integer, nullable=True)
     total_score = db.Column(db.Integer, nullable=True)
 
+    # Newsletter
+    subscribed = db.Column(db.Integer, nullable=False, default=0)
+
     # crypto key for user
     encrypt_key = db.Column(db.String(500))
 
@@ -173,6 +176,18 @@ class Comments(db.Model):
         self.timestamp = datetime.now()
         self.user_id = user_id
         self.post_id = post_id
+
+
+class FAQ(db.Model):
+    __tablename__ = 'faq'
+
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String(500), nullable=False)
+    answer = db.Column(db.Text, nullable=True, default=None)
+
+    def __init__(self, question):
+        self.question = question
+
 
 def db_empty():
     try:
