@@ -17,6 +17,19 @@
             </h1>
         </div>
     </div>
+
+    <div class="block">
+        {% if user_subscribed %}
+        <a class="button is-warning" href="{{ url_for('users.modify_subscription') }}">
+            <strong>Unsubscribe from newsletter</strong>
+        </a>
+        {% else %}
+        <a class="button is-primary" href="{{ url_for('users.modify_subscription') }}">
+            <strong>Subscribe to newsletter</strong>
+        </a>
+        {% endif %}
+    </div>
+
     <div class="block">
     <div class="column is-half is-offset-one-quarter">
         <nav class="level is-mobile">
