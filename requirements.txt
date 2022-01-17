@@ -24,3 +24,4 @@ pandas
 chart_studio
 schedule
 psycopg2
+requests
