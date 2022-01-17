@@ -94,8 +94,9 @@ def login():
 
 @users_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
-
     form = RegisterForm()
+    generated_pin = pyotp.random_base32()
+
     # if request method is POST or form is valid
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -119,7 +120,7 @@ def register():
         # sends user to login page
         return redirectpage("Account created. You may now log in.", 3, url_for('users.login'))
 
-    return render_template('register.html', form=form)
+    return render_template('register.html', form=form, generated_pin=generated_pin)
 
 
 @users_blueprint.route('/account')
