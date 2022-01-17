@@ -3,6 +3,10 @@ import os
 import requests
 from flask import Blueprint, render_template, flash, url_for
 from flask_login import login_required, current_user
+
+from flask_mail import Message
+from mail import mail
+
 from models import User
 from functools import wraps
 from admin.forms import SendNewsletter
@@ -30,31 +34,6 @@ def required_roles(*roles, source):
 @required_roles('admin', source='Admin Page')
 def admin():
     return render_template('admin.html', lastname=current_user.lastname)
-
-# send newsletter
-@admin_blueprint.route('/send_newsletter', methods=['GET', 'POST'])
-@login_required
-@required_roles('admin', source='Admin Page - send newsletter')
-def send_newsletter():
-    form = SendNewsletter()
-    # if request method is POST or form is valid
-    if form.validate_on_submit():
-        r = requests.post(
-            # Here goes your Base API URL
-            "https://api.eu.mailgun.net/v3/noreply.ellie.gg/messages",
-            # Authentication part - A Tuple
-            auth=("api", os.environ.get("MAILGUN_API_URL")),
-
-            # mail data will be used to send emails
-            data={"from": "newsletter <mailgun@noreply.ellie.gg>",
-                  "to": ["newsletter@noreply.ellie.gg"],
-                  "subject": form.subject.data,
-                  "text": form.body.data})
-        if r.status_code == 200:
-            return redirectpage("Newsletter sent successfully", 3, url_for('admin.admin'))
-        else:
-            return redirectpage(("Failed to send!\nError code", r.status_code), 3, url_for('admin.admin'))
-    return render_template('newsletter.html', form=form)
 
 
 # view all users
@@ -90,3 +69,26 @@ def full_logging():
         content.reverse()
 
     return render_template('security_log.html', logs=content)
+
+# send newsletter
+@admin_blueprint.route('/send_newsletter', methods=['GET', 'POST'])
+@login_required
+@required_roles('admin', source='Admin Page - send newsletter')
+def send_newsletter():
+    userList = []
+    users = User.query.filter_by(subscribed=1)
+    for user in users:
+        userList.append(user.email)
+
+    form = SendNewsletter()
+    # if request method is POST or form is valid
+    if form.validate_on_submit():
+        for user_email in userList:
+            msg = Message(str(form.subject.data),
+                          sender='noreply.planeteffect@gmail.com',
+                          recipients=[user_email])
+            msg.body = str(form.body.data)
+
+            mail.send(msg)
+        return redirectpage("Sent successfully!", 3, url_for('admin.admin'))
+    return render_template('newsletter.html', form=form)
