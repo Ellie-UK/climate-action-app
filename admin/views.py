@@ -1,3 +1,5 @@
+import os
+
 import requests
 from flask import Blueprint, render_template, flash, url_for
 from flask_login import login_required, current_user
@@ -41,7 +43,7 @@ def send_newsletter():
             # Here goes your Base API URL
             "https://api.eu.mailgun.net/v3/noreply.ellie.gg/messages",
             # Authentication part - A Tuple
-            auth=("api", "***REMOVED***"),
+            auth=("api", os.environ.get("MAILGUN_API_URL")),
 
             # mail data will be used to send emails
             data={"from": "newsletter <mailgun@noreply.ellie.gg>",
