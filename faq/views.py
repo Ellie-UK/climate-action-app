@@ -32,7 +32,7 @@ def write_question():
 
 @faq_blueprint.route('/<int:id>/answer', methods=('GET', 'POST'))
 @login_required
-@required_roles('admin', source='FAQ Page - answer question')
+@required_roles('admin')
 def write_answer(id):
     question = FAQ.query.filter_by(id=id).first()
 

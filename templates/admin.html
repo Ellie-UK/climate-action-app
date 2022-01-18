@@ -56,35 +56,4 @@
         </div>
     </div>
 
-
-    <div class="column is-8 is-offset-2">
-        <h4 class="title is-4">Security log</h4>
-        <div class="box">
-            {% if logs %}
-                <div class="field">
-                    <table class="table" style="margin-left: auto; margin-right: auto">
-                        <tr>
-                            <th>Last 15 records</th>
-                        </tr>
-                        {% for record in logs %}
-                            <tr>
-                                <td>{{ record }}</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                    <form method="POST" action="/seclog" target="_blank">
-                        <div>
-                            <button class="button">More</button>
-                        </div>
-                    </form>
-                </div>
-            {% endif %}
-            <form method="POST" action="/logging">
-                <div>
-                    <button class="button is-info is-centered is-rounded">View security log</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
 {% endblock %}

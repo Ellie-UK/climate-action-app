@@ -225,3 +225,11 @@ def modify_subscription():
 @users_blueprint.route('/redirectpage', methods=['GET'])
 def redirectpage(message, wait, pointer):
     return render_template('redirectpage.html', message=message, wait=wait, pointer=pointer)
+
+
+# ARTICLES
+
+@users_blueprint.route('/example_article')
+@login_required
+def example_article():
+    return render_template('articles/example_article.html')

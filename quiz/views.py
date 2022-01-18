@@ -137,7 +137,7 @@ def uncompleted():
 def update_question(question_id):
     question = Quiz.query.filter_by(question_id=question_id).first()
     if not question:
-        return render_template('500.html')
+        return render_template('error_codes/500.html')
 
     form = QuizForm()
 
