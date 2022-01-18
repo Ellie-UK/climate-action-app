@@ -9,10 +9,12 @@ from flask_sqlalchemy import SQLAlchemy
 from pathlib import Path
 
 from functools import wraps
+from flask_wtf.csrf import CSRFProtect
 
 # CONFIG
 app = Flask(__name__)
 app.config.from_object('config.DevConfig')
+csrf = CSRFProtect(app)
 
 # initialise mail
 from mail import mail
