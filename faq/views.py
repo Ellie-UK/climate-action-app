@@ -56,3 +56,13 @@ def write_answer(id):
     form.original_question = copy_question.question
 
     return render_template('faq_answer.html', form=form)
+
+
+@faq_blueprint.route('/<int:id>/delete_faq')
+@login_required
+@required_roles('admin')
+def delete_faq(id):
+    FAQ.query.filter_by(id=id).delete()
+    db.session.commit()
+
+    return redirect(url_for('faq.faq'))

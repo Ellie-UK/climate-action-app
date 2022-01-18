@@ -34,6 +34,11 @@
                                                     <i class="fas fa-edit"></i>
                                                 </span>
                                             </a>
+                                            <a class="navbar-item" href="{{ url_for('faq.delete_faq', id=question.id) }}">
+                                                <span class="icon">
+                                                    <i class="fas fa-trash"></i>
+                                                </span>
+                                            </a>
                                         </div>
                                     </div>
                                 {% endif %}
