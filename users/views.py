@@ -213,6 +213,7 @@ def climate_data():
 
 
 @users_blueprint.route('/modify_subscription')
+@login_required
 def modify_subscription():
     current_user.subscribed = 1 - current_user.subscribed
 
