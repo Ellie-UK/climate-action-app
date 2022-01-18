@@ -14,4 +14,8 @@ class DevConfig:
     MAIL_USERNAME = os.environ.get('PLANET_EFFECT_USERNAME')
     MAIL_PASSWORD = os.environ.get('PLANET_EFFECT_PASSWORD')
 
-
+class TestConfig(DevConfig):
+    DEBUG = True
+    TESTING = True
+    WTF_CSRF_ENABLED = False
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
