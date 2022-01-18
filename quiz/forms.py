@@ -3,6 +3,7 @@ from wtforms import StringField, SubmitField, TextAreaField, IntegerField
 from wtforms.validators import DataRequired
 
 
+# flask form for creating a quiz question
 class QuizForm(FlaskForm):
     question = StringField(validators=[DataRequired()])
     option1 = TextAreaField(validators=[DataRequired()])

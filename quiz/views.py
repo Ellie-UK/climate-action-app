@@ -19,6 +19,7 @@ def quiz():
         for y in questions:
             if x.question_id == y.question_id:
                 uncompleted.remove(y)
+    # check if the user has completed the current quiz
     if len(uncompleted) == 0:
         correct = Results.query.filter_by(user_id=current_user.id, correct=True).count()
         question_length = len(questions)
@@ -47,6 +48,7 @@ def quiz_home():
     return render_template('quiz_home.html', flag=flag, txt=txt)
 
 
+# function to submit user answered questions and commit results to the db
 @quiz_blueprint.route('/quiz', methods=["POST"])
 def submit():
     question_id = request.form.get('question_id')
@@ -54,32 +56,31 @@ def submit():
     question = Quiz.query.filter_by(question_id=question_id).first()
     print("fail")
 
+    # ensure the user has answered the question
     if user_answer is None:
         pass
 
+    # check if the user answer was correct
     elif int(user_answer) == question.answer:
         new_result = Results(user_id=current_user.id, question_id=question_id, correct=True)
         db.session.add(new_result)
         db.session.commit()
 
+    # store the user result even if incorrect
     else:
         new_result = Results(user_id=current_user.id, question_id=question_id, correct=False)
         db.session.add(new_result)
         db.session.commit()
 
-        # questions = Quiz.query.all()
 
-    completed = Results.query.filter_by(user_id=current_user.id)
     questions = Quiz.query.all()
-    uncompleted = Quiz.query.all()
-    for x in completed:
-        for y in questions:
-            if x.question_id == y.question_id:
-                uncompleted.remove(y)
+    # run the uncompleted function to get the list of uncompleted questions by the user
+    uncompleted()
 
     return render_template('quiz.html', questions=questions, uncompleted=uncompleted)
 
 
+# function to create any new quiz questions
 @quiz_blueprint.route('/create_question', methods=('GET', 'POST'))
 def create_question():
     form = QuizForm()
@@ -95,6 +96,7 @@ def create_question():
     return render_template('create_quiz_q.html', form=form)
 
 
+# function to delete all data in the results and quiz tables ready for a new quiz
 @quiz_blueprint.route('/delete_quiz')
 def delete_quiz():
     Results.query.delete()
@@ -104,6 +106,7 @@ def delete_quiz():
     return quiz()
 
 
+# function to commit the user score to the database once they have finished the quiz
 @quiz_blueprint.route('/finish_quiz', methods=('GET', 'POST'))
 def finish_quiz():
     correct = Results.query.filter_by(user_id=current_user.id, correct=True).count()
@@ -121,10 +124,13 @@ def finish_quiz():
     return render_template('leaderboard.html', top_10=top_10)
 
 
+# function to create a list of questions a user has not yet completed
 def uncompleted():
     completed = Results.query.filter_by(user_id=current_user.id)
     questions = Quiz.query.all()
     uncompleted = Quiz.query.all()
+
+    # run a loop to remove any questions the user has completed already
     for x in completed:
         for y in questions:
             if x.question_id == y.question_id:
@@ -133,12 +139,14 @@ def uncompleted():
     return uncompleted
 
 
+# function to update a question
 @quiz_blueprint.route('/<int:question_id>/update_question', methods=('GET', 'POST'))
 def update_question(question_id):
     question = Quiz.query.filter_by(question_id=question_id).first()
     if not question:
         return render_template('error_codes/500.html')
 
+    # display quiz form
     form = QuizForm()
 
     if form.validate_on_submit():
@@ -167,6 +175,7 @@ def update_question(question_id):
     return render_template('update_question.html', form=form)
 
 
+# function to delete a question
 @quiz_blueprint.route('/<int:question_id>/delete_question')
 def delete_question(question_id):
     Quiz.query.filter_by(question_id=question_id).delete()
@@ -174,6 +183,8 @@ def delete_question(question_id):
 
     return quiz()
 
+
+# function to get the top 10 user scores
 @quiz_blueprint.route('/leaderboard', methods=['GET'])
 def leaderboard():
     top_10 = User.query.order_by(User.total_score.desc()).limit(10).all()
