@@ -31,59 +31,68 @@
 
       <div id="navbarA" class="navbar-menu">
         <div class="navbar-start">
-          <a class="navbar-item" href="{{ url_for('users.climate_data') }}">
-            Climate Change Data
-          </a>
-          {% if current_user.is_authenticated  and current_user.role == 'admin' %}
+            <a class="navbar-item" href="{{ url_for('users.climate_data') }}">
+                <span class="icon">
+                    <i class="fas fa-globe-americas"></i>
+                </span>
+                <span>
+                    Climate Data
+                </span>
+            </a>
+          {% if current_user.is_authenticated and current_user.role == 'admin' %}
               <a class="navbar-item" href="{{ url_for('admin.admin') }}">
-                  Admin
+                <span class="icon">
+                    <i class="fas fa-user-cog"></i>
+                </span>
+                <span>
+                    Admin Panel
+                </span>
               </a>
           {% endif %}
+        {% if current_user.is_authenticated %}
+            <a class="navbar-item" href="{{ url_for('quiz.quiz_home') }}">
+                <span class="icon">
+                    <i class="fas fa-trophy"></i>
+                </span>
+                <span>
+                    Quiz
+                </span>
+            </a>
+            <a class="navbar-item" href="{{ url_for('forum.forum') }}">
+                <span class="icon">
+                    <i class="fas fa-comments"></i>
+                </span>
+                <span>
+                    Forum
+                </span>
+            </a>
+
+        {% endif %}
           <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link" href="https://bulma.io/documentation/overview/start/">
-              Docs
+            <a class="navbar-link" href="">
+              More
             </a>
             <div class="navbar-dropdown is-boxed">
-              <a class="navbar-item" href="https://bulma.io/documentation/overview/start/">
-                Overview
+              <a class="navbar-item" href="">
+                Example
               </a>
-              <a class="navbar-item" href="https://bulma.io/documentation/overview/modifiers/">
-                Modifiers
+                <a class="navbar-item" href="">
+                Example
               </a>
-              <a class="navbar-item" href="https://bulma.io/documentation/columns/basics/">
-                Columns
+                <a class="navbar-item" href="">
+                Example
               </a>
-              <a class="navbar-item" href="https://bulma.io/documentation/layout/container/">
-                Layout
-              </a>
-              <a class="navbar-item" href="https://bulma.io/documentation/form/general/">
-                Form
-              </a>
-              <hr class="navbar-divider">
-              <a class="navbar-item" href="https://bulma.io/documentation/elements/box/">
-                Elements
-              </a>
-              <a class="navbar-item is-active" href="https://bulma.io/documentation/components/breadcrumb/">
-                Components
-              </a>
+
             </div>
           </div>
         </div>
 
         <div class="navbar-end">
-          <div class="navbar-item">
+
+            <div class="navbar-item">
+            <div class="field is-grouped">
               {% if current_user.is_authenticated %}
-              <div class="field is-grouped">
-              <p class="control">
-                <a class="button" href="{{ url_for('quiz.quiz_home') }}">
-                  <span class="icon">
-                    <i class="fas fa-question"></i>
-                  </span>
-                  <span>
-                    Quiz
-                  </span>
-                </a>
-              </p>
+
               <p class="control">
                 <a class="button" href="{{ url_for('faq.faq') }}">
                   <span class="icon">
@@ -91,16 +100,6 @@
                   </span>
                   <span>
                     FAQ
-                  </span>
-                </a>
-              </p>
-              <p class="control">
-                <a class="button" href="{{ url_for('forum.forum') }}">
-                  <span class="icon">
-                    <i class="fas fa-comments"></i>
-                  </span>
-                  <span>
-                    Forum
                   </span>
                 </a>
               </p>
@@ -150,6 +149,16 @@
         </div>
       </div>
     </nav>
+    <br><br><br>
+    {% if not current_user.is_authenticated and request.path != "/" and request.path != "/login" and request.path != "/register" %}
+        <div class="container">
+            <div class="notification is-primary">
+          <p class="has-text-centered">
+            Please <a href={{ url_for('users.login') }}>log in</a> to gain access to the full site!
+          </p>
+        </div>
+        </div>
+    {% endif %}
 
 
     <script src="../static/nav.js"></script>
