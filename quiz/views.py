@@ -167,6 +167,13 @@ def update_question(question_id):
     return render_template('update_question.html', form=form)
 
 
+@quiz_blueprint.route('/<int:question_id>/delete_question')
+def delete_question(question_id):
+    Quiz.query.filter_by(question_id=question_id).delete()
+    db.session.commit()
+
+    return quiz()
+
 @quiz_blueprint.route('/leaderboard', methods=['GET'])
 def leaderboard():
     top_10 = User.query.order_by(User.total_score.desc()).limit(10).all()
