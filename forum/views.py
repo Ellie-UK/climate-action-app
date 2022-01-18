@@ -21,7 +21,8 @@ def create():
     form = ForumForm()
 
     if form.validate_on_submit():
-        new_post = Forum(user_id=current_user.id, title=form.title.data, body=form.body.data)
+        # new_post = Forum(user_id=current_user.id, title=form.title.data, body=form.body.data)
+        new_post = Forum(user_id=1, title=form.title.data, body=form.body.data)
 
         db.session.add(new_post)
         db.session.commit()
