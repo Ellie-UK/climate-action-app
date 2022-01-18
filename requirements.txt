@@ -1,5 +1,6 @@
 click
 Flask~=2.0.2
+Flask-Testing
 itsdangerous
 Jinja2
 MarkupSafe

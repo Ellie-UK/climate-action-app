@@ -44,3 +44,6 @@ Example 1 : r"C:/Uni/CSC2033/Climate App/Climate Datasets/temperature-change.csv
 Example 2 : r"C:/Uni/CSC2033/Climate App/Climate Datasets/sea-level-rise.csv",
                      
 Example 3 : r"C:/Uni/CSC2033/Climate App/Climate Datasets/co2-concentration.csv"
+
+Furthermore, changes to file paths in data_collection_test.py will be necessary
+in order for the tests to pass
