@@ -95,3 +95,13 @@ class TestQuiz(BaseTestCase):
             self.assertListEqual([], quiz)
             result = Results.query.all()
             self.assertListEqual([], result)
+
+    @mock.patch('flask_login.utils._get_user')
+    def test_finish_quiz(self, current_user):
+        user = User.query.get(1)
+        current_user.return_value = user
+        with self.client:
+            self.client.post('/submit', data=dict(question_id=1, answer=1), follow_redirects=True)
+            self.client.post('/finish_quiz')
+            user = User.query.filter_by(id=1).first()
+            self.assertTrue(user.__getattribute__('total_score') == 1)

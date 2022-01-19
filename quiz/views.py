@@ -111,6 +111,8 @@ def finish_quiz():
 
     db.session.commit()
 
+    return leaderboard()
+
 
 def uncompleted():
     completed = Results.query.filter_by(user_id=current_user.id)
