@@ -8,6 +8,7 @@ from models import FAQ, db
 faq_blueprint = Blueprint('faq', __name__, template_folder='templates')
 
 
+# Base FAQ view
 @faq_blueprint.route('/faq')
 @login_required
 def faq():
@@ -15,11 +16,13 @@ def faq():
     return render_template('faq.html', questions=questions)
 
 
+# Page for writing a question
 @faq_blueprint.route('/question', methods=('GET', 'POST'))
 @login_required
 def write_question():
     form = FAQFormQuestion()
 
+    # If submitted
     if form.validate_on_submit():
         new_question = FAQ(question=form.question.data)
 
@@ -30,18 +33,20 @@ def write_question():
     return render_template('faq_question.html', form=form)
 
 
+# For writing an answer to a question
 @faq_blueprint.route('/<int:id>/answer', methods=('GET', 'POST'))
 @login_required
 @required_roles('admin')
 def write_answer(id):
     question = FAQ.query.filter_by(id=id).first()
 
-    # redirect user to error 500 page if question doesn't exist
+    # Redirect user to error 500 page if question doesn't exist
     if not question:
         return render_template('error_codes/500.html')
 
     form = FAQFormAnswer()
 
+    # If submitted
     if form.validate_on_submit():
         FAQ.query.filter_by(id=id).update({"question": form.question.data})
         FAQ.query.filter_by(id=id).update({"answer": form.answer.data})
@@ -50,14 +55,14 @@ def write_answer(id):
 
         return faq()
 
-    # if form isn't valid, create a copy to avoid database locking error
+    # If form isn't valid, create a copy to avoid database locking error
     copy_question = copy.deepcopy(question)
-
     form.original_question = copy_question.question
 
     return render_template('faq_answer.html', form=form)
 
 
+# For deleting a question
 @faq_blueprint.route('/<int:id>/delete_faq')
 @login_required
 @required_roles('admin')

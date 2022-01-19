@@ -1,20 +1,21 @@
 import copy
-from flask import Blueprint, render_template, flash, redirect, url_for, request, current_app, session
+from flask import Blueprint, render_template, request, session
 from flask_login import login_required, current_user
-from sqlalchemy import desc, func
-from forum.forms import ForumForm
-from models import Forum, Comments, db, Quiz, User, Results
+from models import db, Quiz, User, Results
 from quiz.forms import QuizForm
 
 quiz_blueprint = Blueprint('quiz', __name__, template_folder='templates')
 
-
+# base quiz view
 @quiz_blueprint.route('/quiz', methods=["GET"])
 @login_required
 def quiz():
+    # get all from DB
     questions = Quiz.query.all()
     completed = Results.query.filter_by(user_id=current_user.id)
     uncompleted = Quiz.query.all()
+
+    # for each completed question
     for x in completed:
         for y in questions:
             if x.question_id == y.question_id:
@@ -26,9 +27,10 @@ def quiz():
         txt = str(correct) + '/' + str(question_length)
     else:
         txt = 'Quiz not completed'
+    # render quiz with relevant message
     return render_template('quiz.html', questions=questions, uncompleted=uncompleted, result=txt)
 
-
+# home view for quiz
 @quiz_blueprint.route('/quiz_home')
 @login_required
 def quiz_home():
@@ -85,6 +87,7 @@ def submit():
 def create_question():
     form = QuizForm()
 
+    # if submitted
     if form.validate_on_submit():
         new_question = Quiz(question=form.question.data, option1=form.option1.data, option2=form.option2.data,
                             option3=form.option3.data, option4=form.option4.data, answer=form.answer.data)

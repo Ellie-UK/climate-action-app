@@ -16,11 +16,11 @@ app.config.from_object('config.DevConfig')
 
 # initialise mail
 from mail import mail
-
 mail.init_app(app)
+
+
 # initialise database
 from models import db
-
 db.init_app(app)
 
 
@@ -42,7 +42,6 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'users.login'
 login_manager.init_app(app)
 
-
 @login_manager.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -62,5 +61,6 @@ app.register_blueprint(forum_blueprint)
 app.register_blueprint(quiz_blueprint)
 app.register_blueprint(faq_blueprint)
 
+# run app
 if __name__ == '__main__':
     app.run(debug=True)

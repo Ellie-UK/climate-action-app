@@ -1,5 +1,5 @@
 import copy
-from flask import Blueprint, render_template, flash, redirect, url_for, request, current_app
+from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 from sqlalchemy import desc
 from comments.forms import CommentForm
@@ -45,6 +45,7 @@ def update(post_id):
 
     form = ForumForm()
 
+    # if submitted
     if form.validate_on_submit():
         Forum.query.filter_by(post_id=post_id).update({"title": form.title.data})
         Forum.query.filter_by(post_id=post_id).update({"body": form.body.data})
@@ -78,9 +79,12 @@ def delete(post_id):
 def comment(post_id):
     post = Forum.query.filter_by(post_id=post_id).first()
     form = CommentForm()
+
+    # if submitted
     if form.validate_on_submit():
         new_comment = Comments(body=form.body.data, user_id=current_user.id, post_id=post_id)
 
+        # add new comment
         db.session.add(new_comment)
         db.session.commit()
 

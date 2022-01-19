@@ -1,11 +1,7 @@
-import os
-
-from flask import Blueprint, render_template, flash, url_for
+from flask import Blueprint, render_template, url_for
 from flask_login import login_required, current_user
-
 from flask_mail import Message
 from mail import mail
-
 from models import User
 from functools import wraps
 from admin.forms import SendNewsletter

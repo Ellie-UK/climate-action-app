@@ -10,18 +10,18 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_sqlalchemy import SQLAlchemy
 from config import DevConfig
 
-from flask import render_template
 
 db = SQLAlchemy()
 
-
+# Encrypt data with provided key
 def encrypt(data, key):
     return Fernet(key).encrypt(bytes(data, 'utf-8'))
 
-
+# Decrypt data with provided key
 def decrypt(data, key):
     return Fernet(key).decrypt(data).decode("utf-8")
 
+# Model/class for sea level rise graph
 class Sea_Level_Rise(db.Model):
     __tablename__ = 'sea_level_rise'
 
@@ -37,6 +37,7 @@ class Sea_Level_Rise(db.Model):
         self.day = day
         self.sea_level_rise_average = sea_level_rise_average
 
+# Model/class for temperature anomalies graph
 class Temp_Anomaly(db.Model):
     __tablename__ = 'temperature_anomaly'
 
@@ -52,6 +53,7 @@ class Temp_Anomaly(db.Model):
         self.Day = Day
         self.Temperature_Anomaly = Temperature_Anomaly
 
+# Model/class for C02 Concentration graph
 class C02_Concentration(db.Model):
     __tablename__ = 'co2_concentration'
 
@@ -69,7 +71,7 @@ class C02_Concentration(db.Model):
         self.average_co2_concentrations = average_co2_concentrations
         self.trend_co2_concentrations = trend_co2_concentrations
 
-
+# User model
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
 
@@ -107,12 +109,14 @@ class User(db.Model, UserMixin):
     # relationship between user and results
     results = db.relationship('Results', backref='users')
 
+    # get reset token of current user
     def get_reset_token(self, expires_seconds=600):
         # initialise serializer
         s = Serializer(DevConfig.SECRET_KEY, expires_seconds)
         # create serializer payload
         return s.dumps({'user_id': self.id}).decode('utf-8')
 
+    # check if reset token is valid and belongs to current user
     @staticmethod
     def verify_reset_token(token):
         s = Serializer(DevConfig.SECRET_KEY)
@@ -138,7 +142,7 @@ class User(db.Model, UserMixin):
         self.weekly_score = 0
         self.total_score = 0
 
-
+# Model for forum
 class Forum(db.Model):
     __tablename__ = 'forum'
 
@@ -158,7 +162,7 @@ class Forum(db.Model):
         self.title = title
         self.body = body
 
-
+# Model for comments
 class Comments(db.Model):
     __tablename__ = 'comments'
 
@@ -177,7 +181,7 @@ class Comments(db.Model):
         self.user_id = user_id
         self.post_id = post_id
 
-
+# Model for FAQ
 class FAQ(db.Model):
     __tablename__ = 'faq'
 
@@ -188,18 +192,7 @@ class FAQ(db.Model):
     def __init__(self, question):
         self.question = question
 
-
-def db_empty():
-    try:
-        db_size = os.stat("climate-action.db").st_size
-        if db_size > 100:
-            return False
-        else:
-            return True
-    except:
-        return True
-
-
+# Model for Quiz
 class Quiz(db.Model):
     __tablename__ = ' quiz'
 
@@ -223,6 +216,7 @@ class Quiz(db.Model):
         self.answer = answer
 
 
+# Model for Quiz results
 class Results(db.Model):
     __tablename__ = 'results'
 
@@ -236,7 +230,7 @@ class Results(db.Model):
         self.question_id = question_id
         self.correct = correct
 
-
+# Initalise the DB, used in CLI
 def init_db():
     db.drop_all()
     db.create_all()

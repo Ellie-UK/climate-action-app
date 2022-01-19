@@ -5,7 +5,6 @@ import flask
 from flask import Blueprint, render_template, flash, redirect, url_for, request, session
 from flask_login import current_user, login_user, logout_user, login_required
 from flask_mail import Message
-from sqlalchemy import text, select
 
 from mail import mail
 from models import User, db
@@ -15,16 +14,12 @@ import pyotp
 
 users_blueprint = Blueprint('users', __name__, template_folder='templates')
 
-
+# Function to check if a user is subscribed to the newsletter
 def check_subscription(user_id):
     subUser = User.query.filter_by(id=user_id).first()
     return subUser.subscribed == 1
 
-def get_subscribed():
-    users = User.query.filter_by(subscribed=1)
-    for user in users:
-        print(user.email)
-
+# Function to send a password reset email to the relevant email address
 def send_reset_email(user):
     token = user.get_reset_token()
     msg = Message('Password Reset Request',
@@ -36,7 +31,7 @@ If you did not make this request then simply ignore this email and no changes wi
 '''
     mail.send(msg)
 
-# view user login
+# View user login
 @users_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     # if session attribute logins does not exist create attribute logins
@@ -92,6 +87,7 @@ def login():
     return render_template('login.html', form=form, isDisabled=isDisabled)
 
 
+# View for register page
 @users_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
@@ -117,12 +113,12 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        # sends user to login page
         return redirectpage("Account created. You may now log in.", 3, url_for('users.login'))
 
     return render_template('register.html', form=form, generated_pin=generated_pin)
 
 
+# View for account info/actions
 @users_blueprint.route('/account')
 @login_required
 def account():
@@ -137,15 +133,18 @@ def account():
                            user_subscribed=check_subscription(current_user.id))
 
 
+# Page to render change password form
 @users_blueprint.route('/changepassword', methods=['GET', 'POST'])
 @login_required
 def changepassword():
     form = ChangePasswordForm()
-    # if request method is POST or form is valid
+    # If request method is POST or form is valid
     if form.validate_on_submit():
+        # If password is wrong
         if not check_password_hash(current_user.password, form.current_password.data):
             flash('Current password is incorrect')
             return render_template('changepassword.html', form=form)
+        # Otherwise update password
         current_user.password = generate_password_hash(form.new_password.data)
         db.session.commit()
         return redirectpage("Your password was changed successfully", 3, url_for('users.account'))
@@ -167,6 +166,7 @@ def reset_request():
     return render_template('reset_request.html', title='Reset Password', form=form)
 
 
+# Function to reset password
 @users_blueprint.route("/reset_password/<token>", methods=['GET', 'POST'])
 def reset_token(token):
     if current_user.is_authenticated:
@@ -184,14 +184,14 @@ def reset_token(token):
     return render_template('reset_token.html', title='Reset Password', form=form)
 
 
-# view logout
+# Function to log out
 @users_blueprint.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirectpage("Logged out successfully", 3, url_for('index'))
 
-
+# Function for deleting account
 @users_blueprint.route('/deleteaccount', methods=['POST', 'GET'])
 @login_required
 def deleteaccount():
@@ -206,12 +206,12 @@ def deleteaccount():
     except:
         return redirectpage("Something went wrong, please try again later", 3, url_for('index'))
 
-
+# Page for viewing graphs about climate data
 @users_blueprint.route('/climate_page')
 def climate_data():
     return render_template('climate_data.html')
 
-
+# Function to change between subscribed and unsubscribed
 @users_blueprint.route('/modify_subscription')
 @login_required
 def modify_subscription():
@@ -223,6 +223,7 @@ def modify_subscription():
     else:
         return redirectpage("Unsubscribed successfully!", 3, url_for('users.account'))
 
+# Redirect page
 @users_blueprint.route('/redirectpage', methods=['GET'])
 def redirectpage(message, wait, pointer):
     return render_template('redirectpage.html', message=message, wait=wait, pointer=pointer)
