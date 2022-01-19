@@ -11,6 +11,7 @@
                     {% endif %}
                 {% endwith %}
             <form method="post" class="box">
+            {{ form.csrf_token }}
                 <div class="field">
                     <label for="" class="label">Email</label>
                     <div class="control has-icons-left">

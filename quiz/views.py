@@ -33,9 +33,15 @@ def quiz():
 def quiz_home():
     session['result'] = ""
     session['completed'] = ""
-    uncompleted()
+    completed = Results.query.filter_by(user_id=current_user.id)
     questions = Quiz.query.all()
-    if len(uncompleted()) == 0:
+    uncompleted = Quiz.query.all()
+    for x in completed:
+        for y in questions:
+            if x.question_id == y.question_id:
+                uncompleted.remove(y)
+
+    if len(uncompleted) == 0:
         correct = Results.query.filter_by(user_id=current_user.id, correct=True).count()
         question_length = len(questions)
         txt = str(correct) + '/' + str(question_length)
@@ -165,3 +171,11 @@ def leaderboard():
     top_10 = User.query.order_by(User.total_score.desc()).limit(10).all()
 
     return render_template('leaderboard.html', top_10=top_10)
+
+
+@quiz_blueprint.route('/<int:question_id>/delete_question')
+def delete_question(question_id):
+    Quiz.query.filter_by(question_id=question_id).delete()
+    db.session.commit()
+    return quiz()
+
