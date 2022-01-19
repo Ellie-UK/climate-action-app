@@ -105,3 +105,11 @@ class TestQuiz(BaseTestCase):
             self.client.post('/finish_quiz')
             user = User.query.filter_by(id=1).first()
             self.assertTrue(user.__getattribute__('total_score') == 1)
+
+    @mock.patch('flask_login.utils._get_user')
+    def test_leaderboard(self, current_user):
+        user = User.query.get(1)
+        current_user.return_value = user
+        with self.client:
+            response = self.client.get('/leaderboard', follow_redirects=True)
+            self.assertIn(b'Leaderboard', response.data)
