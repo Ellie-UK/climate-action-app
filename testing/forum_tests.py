@@ -85,3 +85,11 @@ class TestComments(BaseTestCase):
             self.client.post('/1/comment', data=dict(body='comment'), follow_redirects=True)
             comment = Comments.query.filter_by(post_id=1).first()
             self.assertTrue(comment.__getattribute__('body') == 'comment')
+
+    @mock.patch('flask_login.utils._get_user')
+    def test_view_comment(self, current_user):
+        user = User.query.get(1)
+        current_user.return_value = user
+        with self.client:
+            response = self.client.get('/1/view_comments', follow_redirects=True)
+            self.assertIn(b'comment', response.data)
