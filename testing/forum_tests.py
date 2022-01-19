@@ -1,7 +1,7 @@
 import unittest
 from flask_testing import TestCase
 
-from forum.views import delete
+from forum.views import delete, forum, update
 from models import db, Forum
 from app import app, load_user
 from models import User
@@ -58,11 +58,21 @@ class TestCreateForum(BaseTestCase):
 
 
 class TestDeleteForum(BaseTestCase):
-    @mock.patch('flask_login.utils._get_user')
-    def test_delete_forum(self, current_user):
-        user = User.query.get(1)
-        current_user.return_value = user
+    def test_delete_forum(self):
         with self.client:
             delete(1)
             forum = Forum.query.filter_by(post_id=1).first()
             self.assertIsNone(forum)
+
+
+class TestUpdateForum(BaseTestCase):
+    @mock.patch('flask_login.utils._get_user')
+    def test_update_forum(self, current_user):
+        user = User.query.get(1)
+        current_user.return_value = user
+        with self.client:
+            self.client.post('/1/update', data=dict(title='Updated', body='Test'), follow_redirects=True)
+            post = Forum.query.filter_by(post_id=1).first()
+            self.assertTrue(post.__getattribute__('title') == 'Updated')
+
+

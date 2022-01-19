@@ -7,7 +7,6 @@
         <div class="box">
             <form method="POST">
                 <div class="field">
-                    {{ form.csrf_token() }}
                     <div class="control">
                         {{ form.title(class="input", placeholder="Title") }}
                         {% for error in form.title.errors %}
