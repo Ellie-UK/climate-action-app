@@ -2,7 +2,7 @@ import unittest
 from flask_testing import TestCase
 
 from forum.views import delete, forum, update
-from models import db, Forum, Comments, Quiz
+from models import db, Forum, Comments, Quiz, Results
 from app import app, load_user
 from models import User
 import mock
@@ -45,3 +45,26 @@ class TestQuiz(BaseTestCase):
         with self.client:
             response = self.client.get('/quiz', follow_redirects=True)
             self.assertIn(b'Will this pass?', response.data)
+
+    @mock.patch('flask_login.utils._get_user')
+    def test_submit(self, current_user):
+        user = User.query.get(1)
+        current_user.return_value = user
+        with self.client:
+            self.client.post('/submit', data=dict(question_id=1, answer=1), follow_redirects=True)
+            result = Results.query.filter_by(user_id=1).first()
+            self.assertTrue(result.__getattribute__('question_id') == 1)
+
+    @mock.patch('flask_login.utils._get_user')
+    def test_create_question(self, current_user):
+        user = User.query.get(1)
+        current_user.return_value = user
+        with self.client:
+            self.client.post('/create_question', data=dict(question='Test?',
+                                                           option1='A',
+                                                           option2='B',
+                                                           option3='C',
+                                                           option4='D',
+                                                           answer=1))
+            question = Quiz.query.filter_by(question_id=2).first()
+            self.assertIsNotNone(question)

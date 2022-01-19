@@ -47,7 +47,7 @@ def quiz_home():
     return render_template('quiz_home.html', flag=flag, txt=txt)
 
 
-@quiz_blueprint.route('/quiz', methods=["POST"])
+@quiz_blueprint.route('/submit', methods=["POST"])
 def submit():
     question_id = request.form.get('question_id')
     user_answer = request.form.get('answer')
@@ -63,8 +63,13 @@ def submit():
         db.session.add(new_result)
         db.session.commit()
 
-        questions = Quiz.query.all()
-        uncompleted()
+    questions = Quiz.query.all()
+    completed = Results.query.filter_by(user_id=current_user.id)
+    uncompleted = Quiz.query.all()
+    for x in completed:
+        for y in questions:
+            if x.question_id == y.question_id:
+                uncompleted.remove(y)
 
     return render_template('quiz.html', questions=questions, uncompleted=uncompleted)
 
