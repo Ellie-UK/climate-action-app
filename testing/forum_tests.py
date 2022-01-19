@@ -1,5 +1,7 @@
 import unittest
 from flask_testing import TestCase
+
+from forum.views import delete
 from models import db, Forum
 from app import app, load_user
 from models import User
@@ -30,8 +32,6 @@ class BaseTestCase(TestCase):
         db.drop_all()
 
 
-
-
 class TestForum(BaseTestCase):
     def test_forum(self):
         with self.client:
@@ -42,7 +42,6 @@ class TestForum(BaseTestCase):
     """def test_delete_forum(self):
         with self.client:
             response = self.client.post(/)"""
-
 
 
 class TestCreateForum(BaseTestCase):
@@ -58,3 +57,12 @@ class TestCreateForum(BaseTestCase):
             self.assertIn(b"Forum created", response.data)
 
 
+class TestDeleteForum(BaseTestCase):
+    @mock.patch('flask_login.utils._get_user')
+    def test_delete_forum(self, current_user):
+        user = User.query.get(1)
+        current_user.return_value = user
+        with self.client:
+            delete(1)
+            forum = Forum.query.filter_by(post_id=1).first()
+            self.assertIsNone(forum)
