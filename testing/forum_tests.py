@@ -2,7 +2,7 @@ import unittest
 from flask_testing import TestCase
 
 from forum.views import delete, forum, update
-from models import db, Forum
+from models import db, Forum, Comments
 from app import app, load_user
 from models import User
 import mock
@@ -76,3 +76,12 @@ class TestUpdateForum(BaseTestCase):
             self.assertTrue(post.__getattribute__('title') == 'Updated')
 
 
+class TestComments(BaseTestCase):
+    @mock.patch('flask_login.utils._get_user')
+    def test_comment(self, current_user):
+        user = User.query.get(1)
+        current_user.return_value = user
+        with self.client:
+            self.client.post('/1/comment', data=dict(body='comment'), follow_redirects=True)
+            comment = Comments.query.filter_by(post_id=1).first()
+            self.assertTrue(comment.__getattribute__('body') == 'comment')
