@@ -7,6 +7,8 @@ from app import app, load_user
 from models import User
 import mock
 
+from quiz.views import delete_quiz
+
 
 class BaseTestCase(TestCase):
     ''' Base test'''
@@ -82,3 +84,14 @@ class TestQuiz(BaseTestCase):
                                                              answer=1))
             question = Quiz.query.filter_by(question_id=1).first()
             self.assertTrue(question.__getattribute__ ('question') == 'Update?')
+
+    @mock.patch('flask_login.utils._get_user')
+    def test_delete_quiz(self, current_user):
+        user = User.query.get(1)
+        current_user.return_value = user
+        with self.client:
+            delete_quiz()
+            quiz = Quiz.query.all()
+            self.assertListEqual([], quiz)
+            result = Results.query.all()
+            self.assertListEqual([], result)
