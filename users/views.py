@@ -239,3 +239,8 @@ def what_is_climate_change():
 @login_required
 def charities():
     return render_template('articles/charities.html')
+
+@users_blueprint.route('/is_it_real')
+@login_required
+def is_it_real():
+    return render_template('articles/is_it_real.html')
