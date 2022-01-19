@@ -230,7 +230,12 @@ def redirectpage(message, wait, pointer):
 
 # ARTICLES
 
-@users_blueprint.route('/example_article')
+@users_blueprint.route('/what_is_climate_change')
 @login_required
-def example_article():
-    return render_template('articles/example_article.html')
+def what_is_climate_change():
+    return render_template('articles/what_is_climate_change.html')
+
+@users_blueprint.route('/charities')
+@login_required
+def charities():
+    return render_template('articles/charities.html')
