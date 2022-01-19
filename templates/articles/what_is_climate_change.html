@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-    <div class="content">
+    <div class="content is-medium">
         <h1>Global climate change </h1>
         <p><strong>What is climate change?</strong> Climate change is the average weather in a place over many years, Climate change is a shift in those average conditions
             The rapid climate change we are now seeing is caused by us humans who are using the majority of the earths natural resources such as oil,
@@ -104,5 +104,12 @@
             I hope this article helped you understand the current world effects of global warming, and inform you about what actions
             you can take to help us create a more sustainable future for centuries to come.
         </p>
+
+        <hr style="border-top: 2px solid #dfe2e3">
+
+        <div>
+            <br>
+            <a class="button is-primary" href="{{ url_for('index') }}">Go home</a>
+        </div>
     </div>
 {% endblock %}
