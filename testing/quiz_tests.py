@@ -68,3 +68,17 @@ class TestQuiz(BaseTestCase):
                                                            answer=1))
             question = Quiz.query.filter_by(question_id=2).first()
             self.assertIsNotNone(question)
+
+    @mock.patch('flask_login.utils._get_user')
+    def test_update_question(self, current_user):
+        user = User.query.get(1)
+        current_user.return_value = user
+        with self.client:
+            self.client.post('/1/update_question', data=dict(question='Update?',
+                                                             option1='A',
+                                                             option2='B',
+                                                             option3='C',
+                                                             option4='D',
+                                                             answer=1))
+            question = Quiz.query.filter_by(question_id=1).first()
+            self.assertTrue(question.__getattribute__ ('question') == 'Update?')
