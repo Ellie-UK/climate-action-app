@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <div class="content is-medium">
+        <h1>Climate Change - is it real?</h1>
+        <p>"<strong>Scientific evidence for warming of the climate system is <i>unequivocal</i></strong>." - IPCC on Climate Change.</p>
+        <p>Earths climate fluctuates throughout history. In the past 650,000 years there have been seven cycles of glaciers advancing and retreating again.
+         This causes people to use this as an argument for what is happening to our planet now, and why we shouldn't worry.</p>
+        <figure>
+            <img src="https://climate.nasa.gov/system/content_pages/main_images/203_co2-graph-061219.jpg" height="1280" width="800">
+
+            <figcaption>
+                Figure 1: Carbon dioxide level over hundreds of thousands of years
+            </figcaption>
+        </figure>
+        <h2>What's different now?</h2>
+        <p>The big difference right now is that the latest rise in CO<sub>2</sub> levels is a direct result of the actions of humans in the modern era.
+         Levels are currently way higher than they've ever been over many millenia. It is undeniable that humans have caused the warmth of the atmosphere,
+         ocean, and land and cause rapid changes to the planet's ecosystems.</p>
+        <figure>
+
+            <img src="https://climate.nasa.gov/internal_resources/39/">
+
+        </figure>
+        <h2>What is some of the evidence?</h2>
+        <ul>
+            <li><strong>Global Temperature Rising</strong> - The planet's average surface temperature has risen ~1.18 degrees Celsius since the 19th century.
+             This change is largely driven by increased CO<sub>2</sub> emmissions in the atmosphere and other human activities. The majority of this warming
+            occurred in the last 40 years with 2016 and 2020 being tied as the warmest years on record.</li>
+            <li><strong>Sea Level Rising</strong> - Global sea levels have risen 20 centimeters in the last 100 years. However, the rate of that in the last
+             two decased is almost double that of the last 100 years and is <i>still</i> accelerating every year.</li>
+            <li><strong>Extreme Weather</strong> - The number of record-breaking high temperature related events in the US has been increasing. During this, the
+             number of record-breaking low temperature events has been decreasing. This shows the planets rising temperature is having an effect on the planet.
+             An example of this would be the large increase in intense rainfall recordied in the US since 1950.</li>
+
+        </ul>
+        <h2>What can we do?</h2>
+        <p>
+            Major changes need to come from the <strong>governments and businesses</strong> around the world. Countries have agreed to tackle
+            this problem together and try to <strong>keep global warming to 1.5C</strong>. There has been plans to
+            <strong>reduce Carbon emissions by 2050</strong>.
+            Experts say that this is <strong>achievable</strong> and would require the government and individuals to make major changes.
+
+        </p>
+
+        <p>Want to learn more? <a href="https://www.nytimes.com/article/climate-change-global-warming-faq.html">This article</a> by the New York Times
+         includes a deeper look into evidence that climate change is real and causing damage to our planet.</p>
+
+        <hr style="border-top: 2px solid #dfe2e3">
+
+        <div>
+            <br>
+            <a class="button is-primary" href="{{ url_for('index') }}">Go home</a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <div class="content is-medium">
+        <h1>Climate Change Charities</h1>
+        <p>Looking to help by donating to a climate change charity? Read this article to gain some insight into some of our top picks.</p>
+        <figure>
+            <img src="https://grist.org/wp-content/uploads/2016/11/donations1.jpg" height="1600" width="800">
+        </figure>
+        <h2>Rainforest Foundation UK</h2>
+        <p><strong>Rainforest Foundation UK</strong> is a charity dedicated to saving rainforests localy and globally.
+            They challenge logging companies, help forest communities gain land rights and help them manage their forests - enabling us to protect the environment.
+         They believe the best way to combat deforestation is via empowering indigenous people to defend their land.</p>
+        <p>You can donate to Rainforest Foundation UK <a href="https://rainforestfoundationuk.enthuse.com/donation#!/">by clicking here</a>.</p>
+
+        <hr style="border-top: 2px solid #dfe2e3">
+
+        <h2>Climate Emergency Fund</h2>
+        <p><strong>Climate Emergency Fund</strong> is a youth-based activist foundation created in 2019. Since then it
+         has been taking the climate movement by storm with their protests and determinism. They seek a change in the way
+         companies and countries have been destroying the planet immediately and believe we cannot wait any longer.</p>
+        <p>You can donate to Climate Emergency Fund <a href="https://www.climateemergencyfund.org/about?form=donate">by clicking here</a>.</p>
+
+        <hr style="border-top: 2px solid #dfe2e3">
+
+        <h2>TerraPraxis</h2>
+        <p><strong>TerraPraxis</strong> is a UK-based nonprofit organisation aiming to find new and innovative ways
+         to combat the energy crisis currently fueling climate change. They mainly focus on pushing nuclear power, which
+         has been proven to be a lot safer than many think. They want to push the change to nuclear power in the UK as seen
+         in other European countries such as Sweden and France.</p>
+        <p>You can donate to TerraPraxis <a href="https://www.every.org/terrapraxis/donate?">by clicking here</a>.</p>
+
+        <hr style="border-top: 2px solid #dfe2e3">
+
+        <h2>Clean Air Task Force</h2>
+        <p><strong>Clean Air Task Force</strong> is a charity which focuses on providing science and evidence-backed solutions
+         to complex real world issues. They understand that the climate crisis is a big and complicated problem and a great challenge,
+         and so explore every opportunity that shows promise. They have been operating for over 25 years.</p>
+        <p>You can donate to Clean Air Task Force <a href="https://give.catf.us/give/329616/#!/donation/checkout">by clicking here</a>.</p>
+
+        <hr style="border-top: 2px solid #dfe2e3">
+
+        <h2>Donating isn't everything you can do!</h2>
+        <p>You can get started right now. <a href="../static/get-started.pdf">Click here</a> to view a guide to getting started on taking action to save the planet!</p>
+
+        <hr style="border-top: 2px solid #dfe2e3">
+
+        <sub>This information is correct as of <i>19/01/2022</i>.</sub>
+
+        <div>
+            <br>
+            <a class="button is-primary" href="{{ url_for('index') }}">Go home</a>
+        </div>
+    </div>
+{% endblock %}
