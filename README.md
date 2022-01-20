@@ -9,6 +9,16 @@
 </a>
 </p>
 
+
+
+<p align="center">
+   <img src="https://img.shields.io/github/license/ellie-uk/climate-action-app">
+   <img src="https://img.shields.io/github/commit-activity/w/ellie-uk/climate-action-app">
+   <img src="https://img.shields.io/github/last-commit/ellie-uk/climate-action-app"><br>
+   <img src="https://img.shields.io/github/languages/count/ellie-uk/climate-action-app">
+   <img src="https://img.shields.io/github/languages/code-size/ellie-uk/climate-action-app">
+</p>
+
 ## What is this?
 This is **Team 11**’s project called **Planet Effect**. 
 This project is aimed toward the climate action [UN development goal](https://sdgs.un.org/goals). 
