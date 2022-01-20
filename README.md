@@ -1,8 +1,8 @@
 # Planet Effect 🌎
 
-<p align="center">
+<h2 align="center">
   <b>CSC2033 Team 11 Climate Action App</b>
-</p>
+</h2>
 <p align="center">
 <a href="http://planeteffect.ellie.gg">
    <img src="/static/Logo.png" height="150" alt="(Planet Effect Logo)">
