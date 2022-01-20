@@ -1,5 +1,4 @@
-# Planet Effect 🌎
-
+<h1 align="center">Planet Effect 🌎</h1>
 <h2 align="center">
   <b>CSC2033 Team 11 Climate Action App</b>
 </h2>
