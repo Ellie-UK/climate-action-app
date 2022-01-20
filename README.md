@@ -35,6 +35,7 @@ you should register an account and then take a look around!
 ## How do I access it?
 ### Online
 The website can be accessed at [planeteffect.ellie.gg](http://planeteffect.ellie.gg).
+If you are having issues connecting, try connecting to HTTP instead of HTTPS.
 
 ### Locally
 1. **Clone this repo**. You must first clone this repo. A guide on how to do so can [be found here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository). **Make sure to set the project as a Flask server**.
