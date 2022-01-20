@@ -11,7 +11,7 @@
 
 ## What is this?
 This is **Team 11**’s project called **Planet Effect**. 
-This project is aimed toward the climate action UN development goal. 
+This project is aimed toward the climate action [UN development goal](https://sdgs.un.org/goals). 
 The purpose of this website is to provide an introduction to climate action, 
 and give users a few ways to learn about it. This includes articles with information 
 ranging from a background in global warming - to charities we’ve picked out, 
