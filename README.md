@@ -34,7 +34,7 @@ you should register an account and then take a look around!
 
 ## How do I access it?
 ### Online
-The website can be accessed at [planeteffect.ellie.gg](http://planeteffect.ellie.gg).
+The website can be accessed at [planeteffect.ellie.gg](http://planeteffect.ellie.gg).\
 If you are having issues connecting, try connecting to HTTP instead of HTTPS.
 
 ### Locally
