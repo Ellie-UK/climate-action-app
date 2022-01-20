@@ -8,7 +8,7 @@
 </p>
 
 ---
-##What is this?
+## What is this?
 This is **Team 11**’s project called **Planet Effect**. 
 This project is aimed toward the climate action UN development goal. 
 The purpose of this website is to provide an introduction to climate action, 
@@ -22,11 +22,11 @@ including a leaderboard to track your progress. We hope you can get involved wit
 website and take part in the activities and discussions on the site! To do this, 
 you should register an account and then take a look around! 
 
-##How do I access it?
-###Online
+## How do I access it?
+### Online
 The website can be accessed at [planeteffect.ellie.gg](http://planeteffect.ellie.gg).
 
-###Locally
+### Locally
 1. **Clone this repo**. You must first clone this repo. A guide on how to do so can [be found here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository). **Make sure to set the project as a Flask server**.
 
 2. **Install requirements**. This can be done by installing the dependencies listed in `requirements.txt`.
@@ -73,7 +73,7 @@ on the end of the path, see example.
     **Furthermore**, changes to file paths in data_collection_test.py will be necessary
 in order for the tests to pass
 
-##License
+## License
 [The MIT License](https://opensource.org/licenses/mit-license.php)
 
 Copyright 2022 Newcastle University & Team 11
