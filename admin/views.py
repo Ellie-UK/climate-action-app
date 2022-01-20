@@ -6,6 +6,7 @@ from models import User
 from functools import wraps
 from admin.forms import SendNewsletter
 from users.views import redirectpage
+from sqlalchemy import asc
 
 admin_blueprint = Blueprint('admin', __name__, template_folder='templates')
 
@@ -39,7 +40,7 @@ def admin():
 @required_roles('admin')
 def view_users():
     return render_template('admin.html', lastname=current_user.lastname,
-                           all_users=User.query.all())
+                           all_users=User.query.order_by(asc('id')).all())
 
 
 # send newsletter
