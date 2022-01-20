@@ -36,9 +36,15 @@ def quiz():
 def quiz_home():
     session['result'] = ""
     session['completed'] = ""
-    uncompleted()
+    completed = Results.query.filter_by(user_id=current_user.id)
     questions = Quiz.query.all()
-    if len(uncompleted()) == 0:
+    uncompleted = Quiz.query.all()
+    for x in completed:
+        for y in questions:
+            if x.question_id == y.question_id:
+                uncompleted.remove(y)
+
+    if len(uncompleted) == 0:
         correct = Results.query.filter_by(user_id=current_user.id, correct=True).count()
         question_length = len(questions)
         txt = str(correct) + '/' + str(question_length)
@@ -51,12 +57,11 @@ def quiz_home():
 
 
 # function to submit user answered questions and commit results to the db
-@quiz_blueprint.route('/quiz', methods=["POST"])
+@quiz_blueprint.route('/submit', methods=["POST"])
 def submit():
     question_id = request.form.get('question_id')
     user_answer = request.form.get('answer')
     question = Quiz.query.filter_by(question_id=question_id).first()
-    print("fail")
 
     # ensure the user has answered the question
     if user_answer is None:
@@ -68,16 +73,18 @@ def submit():
         db.session.add(new_result)
         db.session.commit()
 
-    # store the user result even if incorrect
     else:
         new_result = Results(user_id=current_user.id, question_id=question_id, correct=False)
         db.session.add(new_result)
         db.session.commit()
 
-
     questions = Quiz.query.all()
-    # run the uncompleted function to get the list of uncompleted questions by the user
-    uncompleted()
+    completed = Results.query.filter_by(user_id=current_user.id)
+    uncompleted = Quiz.query.all()
+    for x in completed:
+        for y in questions:
+            if x.question_id == y.question_id:
+                uncompleted.remove(y)
 
     return render_template('quiz.html', questions=questions, uncompleted=uncompleted)
 

@@ -6,8 +6,8 @@
         <h3 class="title is-3">Update Post</h3>
         <div class="box">
             <form method="POST">
+            {{ form.csrf_token() }}
                 <div class="field">
-                    {{ form.csrf_token() }}
                     <div class="control">
                         {{ form.title(class="input") }}
                         {% for error in form.title.errors %}

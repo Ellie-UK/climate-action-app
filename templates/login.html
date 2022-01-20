@@ -12,9 +12,8 @@
             {% endwith %}
                 <form method="post">
                     <div class="box">
-
+                    {{ form.csrf_token }}
                     <div class="field">
-                        {{ form.csrf_token() }}
                         <label for="" class="label">Email</label>
                         <div class="control has-icons-left">
                             {{ form.email(class="input", placeholder="bob@email.com", disabled=isDisabled) }}

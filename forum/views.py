@@ -26,7 +26,6 @@ def create():
     if form.validate_on_submit():
         new_post = Forum(user_id=current_user.id, title=form.title.data, body=form.body.data)
         # new_post = Forum(user_id=1, title=form.title.data, body=form.body.data)
-        new_post = Forum(user_id=current_user.id, title=form.title.data, body=form.body.data)
 
         # commit changes to database
         db.session.add(new_post)
@@ -108,3 +107,6 @@ def delete_comment(comment_id, post_id):
     db.session.commit()
 
     return view_comments(post_id)
+
+
+
