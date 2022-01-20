@@ -4,7 +4,9 @@
   <b>CSC2033 Team 11 Climate Action App</b>
 </p>
 <p align="center">
-<img src="/static/Logo.png" height="150" alt="(Planet Effect Logo)" href="http://planeteffect.ellie.gg">
+<a href="http://planeteffect.ellie.gg">
+   <img src="/static/Logo.png" height="150" alt="(Planet Effect Logo)">
+</a>
 </p>
 
 ## What is this?
