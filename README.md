@@ -7,7 +7,6 @@
 <img src="/static/Logo.png" height="150" alt="(Planet Effect Logo)">
 </p>
 
----
 ## What is this?
 This is **Team 11**’s project called **Planet Effect**. 
 This project is aimed toward the climate action UN development goal. 
