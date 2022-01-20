@@ -21,12 +21,14 @@
                                 <br>
                                 {{ comments.body }}
                                 <br>
-                            <div id="navbarMenuHeroA" class="navbar-menu">
-                                <div class="navbar-start">
-                                    <a class="navbar-item" href="{{ url_for('forum.delete_comment',
-                                    comment_id=comments.comment_id, post_id=comments.post_id) }}">Delete</a>
-                                </div>
-                            </div>
+                                {% if comments.user_id == current_user.id or current_user.role == 'admin'%}
+                                    <div id="navbarMenuHeroA" class="navbar-menu">
+                                        <div class="navbar-start">
+                                            <a class="navbar-item" href="{{ url_for('forum.delete_comment',
+                                            comment_id=comments.comment_id, post_id=comments.post_id) }}">Delete</a>
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </p>
                         </div>
                     </div>
