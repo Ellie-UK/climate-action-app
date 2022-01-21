@@ -46,7 +46,15 @@ If you are having issues connecting, try connecting to HTTP instead of HTTPS.
 Some parts of the web scraping requires access to local file
 paths. We will not provide our environment variable values as this would lead to the compromise of our accounts.
 
-4. **Set up data scraping**:
+4. **Initialise DB**. In your Python terminal, you must run the following:
+    
+    `from models import db, init_db`
+                     
+    `with app.app_context():`
+                     
+    `init_db()`
+  
+5. **Set up data scraping**:
 
     **Firstly**, you will need to specify the default download
 directory, this can be found on line 25 with variable name
